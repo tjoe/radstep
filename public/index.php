@@ -60,24 +60,33 @@
 	</head>
 	
 	
-	<body style="background-color:#909090;margin:10px 0px; padding:0px;text-align:center;">
+	<body style="margin:0 auto; padding:0px;">
 
 
 	<div id="div_mainpage">
 	
-	<div id="div_main" style="width:940px; margin:0 auto;">
-		<h1 style="letter-spacing: 4px;">RadSTEP</h1>
-		<div id="div_grid" style="width:100% margin:0 auto;">
+	<div id="div_main" style="margin:0 auto;">
+		<h1 style="text-align:center;letter-spacing: 8px;">RadSTEP</h1>
+		<div id="div_login" style="width:50%; margin:0 auto;">
+			<form id="form_check_pass" method="post" action="login.php" accept-charset="UTF-8" >
+				
+				<fieldset>
+				<legend>Login</legend>
+				
+				<label for="txtbox_username">Email Address/Username</label><br />
+				<input id="txtbox_username" name="txtbox_username" type="text" style="border:solid 1px #888; height:32px;font:18px sans-serif;" /><br />
+				<label for="txtbox_password">Password</label><br />
+				<input id="txtbox_password" name="txtbox_password" type="password" style="border:solid 1px #888; height:32px;font:18px sans-serif;" /><br />
+				<input id="btn_submit" name="btn_submit" type="submit" />
+				</fieldset>
 			
-			
+			</form>
+			<a href="fogot_password.php">Forgot password...</a><br />
+			<a href="register.php">Register...</a>
 
-		</div>
-	</div>
+		</div><!--CLOSE div_login-->
+	</div><!--CLOSE div_main-->
 
-	
-
-	<div id="div_soc" style="height:25px; margin:0 auto;" >
-	</div><!-- div_soc -->
 		
 	</div><!-- div_mainpage -->
 	
