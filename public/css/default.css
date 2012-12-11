@@ -25,7 +25,8 @@
 }
 
 body {
-	font-family:Arial,sans-serif;
+	//font-family:Arial,sans-serif;
+	font: 62.5% "Trebuchet MS", sans-serif;
 	background-color: #DDD;
 	color:#999;
 }

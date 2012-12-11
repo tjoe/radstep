@@ -5,7 +5,7 @@ if(isset($_POST['submitted']))
 {
    if($rsauth->Login())
    {
-        $rsauth->RedirectToURL("test_test.php");
+        $rsauth->RedirectToURL("usermain.php");
    }
 }
 
@@ -27,8 +27,7 @@ if(isset($_POST['submitted']))
 		<title>RadSTEP</title>
 	
 	
-	<link rel="stylesheet" type="text/less" href="css/default.less" />
-	<script type="text/javascript" src="lib/less-1.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
 	<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
     <script type='text/javascript' src='lib/gen_validatorv4.js'></script>
@@ -73,8 +72,8 @@ if(isset($_POST['submitted']))
 	<div id="div_mainpage">
 	
 	<div id="div_header" style="text-align:center;margin:0 auto;">
-		<h1 style="text-align:center;letter-spacing: 15px;">RadSTEP</h1>
-		<h3 style="letter-spacing: 10px; font-variant: small-caps;">alpha build</h3>
+		<h1 style="text-align:center;letter-spacing: 1.5em;">RadSTEP</h1>
+		<h3 style="letter-spacing: 1em; font-variant: small-caps;">alpha build</h3>
 	</div><!--div_header-->
 	
 	<div id="div_main" style="margin:0 auto;">

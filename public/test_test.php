@@ -25,11 +25,8 @@ if(!$rsauth->CheckLogin())
 		<title>RadSTEP</title>
 	
 	
-	<link rel="stylesheet" type="text/less" href="css/default.less" />
-	<script type="text/javascript" src="lib/less-1.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/less" href="css/default.css" />
 	<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
-	<link rel="STYLESHEET" type="text/css" href="css/rsauth.css" />
-    <script type='text/javascript' src='lib/gen_validatorv4.js'></script>
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

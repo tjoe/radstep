@@ -18,7 +18,7 @@ border-radius: 10px;
 #div_rsauthform legend, #div_rsauthform h2
 {
    font-family : Arial, sans-serif;
-   font-size: 1.3em;
+   font-size: 1.5em;
    font-weight:bold;
    color:#333;
 }
@@ -26,7 +26,7 @@ border-radius: 10px;
 #div_rsauthform label
 {
    font-family : Arial, sans-serif;
-   font-size:0.8em;
+   font-size:1em;
    font-weight: bold;
 }
 
@@ -34,7 +34,7 @@ border-radius: 10px;
 #div_rsauthform input[type="password"]
 {
   font-family : Arial, Verdana, sans-serif;
-  font-size: 0.8em;
+  font-size: 1em;
   line-height:140%;
   color : #000; 
   padding : 3px; 
@@ -90,7 +90,7 @@ border-radius: 10px;
 #div_rsauthform .error
 {
    font-family: Verdana, Arial, sans-serif; 
-   font-size: 0.7em;
+   font-size: 1em;
    color: #900;
    background-color : #ffff00;
 }
@@ -113,7 +113,7 @@ border-radius: 10px;
 #div_rsauthform fieldset#antispam legend
 {
    font-family : Arial, sans-serif;
-   font-size: 0.8em;
+   font-size: 1em;
    font-weight:bold;
    color:#333;   
 }
@@ -121,7 +121,7 @@ border-radius: 10px;
 #div_rsauthform .short_explanation
 {
    font-family : Arial, sans-serif;
-   font-size: 0.6em;
+   font-size: 0.8em;
    color:#333;   
 }
 
@@ -145,6 +145,7 @@ border-radius: 10px;
     display:none;
 }
 
+/*
 #fg_membersite_content li
 {
 font-family : Arial, sans-serif;
@@ -165,3 +166,4 @@ padding-bottom:10px;
    font-weight:bold;
    color:#333;
 }
+*/
