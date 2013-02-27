@@ -1,16 +1,13 @@
-<?php
+<?PHP
+require_once("./include/authentication_config.php");
 
-	require_once("./include/radstep.php");
-	require_once("./include/user.php");
-	$USER = new User();
-	
-	if(!$USER->authenticated){
-		redirect("./index.php");
-		exit;
-	}
-	
+if(!$rsauth->CheckLogin())
+{
+    $rsauth->RedirectToURL("index.php");
+    exit;
+}
+
 ?>
-
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -59,12 +56,10 @@
 		alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
 	});
 	
-	//if multiple roles:
-	$( "#div_tabs" ).tabs();
-	//if resident
-	$( "#accordion_resident" ).accordion();
-	//if attending
-	$( "#accordion_attending" ).accordion();
+
+
+
+
 	
 	}); //close jquery(document).ready
 	
@@ -85,47 +80,53 @@
 	
 	<div id="div_main" style="margin:0 auto;">
 	
-		<h2>Welcome, <? echo $_SESSION['name_of_user'] ?>. </h2>
+		<h3><? echo $_SESSION['name_of_user'] ?></h3>
+		
+		<!-- SELECT qset_id FROM assignments WHERE assignment_id=$_GET['assignment_id'] -->
+		<!-- check that user_id in assignment matches the current users id, if completed = set review mode, if not completed = set exam mode -->
+		
+		<!-- SELECT q_id FROM qset_questions WHERE qset_id = 'assignment_qset_id' -->
+		
+		<!-- TIMER at top of total time elapsed while on this page, autosubmit assignment if exceeds timelimit -->
 
-		<!-- Tabs -->
-		<h2>RadSTEP Roles</h2>
-		<div id="div_tabs">
-			<ul>
-				<li><a href="#tabs-1">Resident</a></li>
-				<li><a href="#tabs-2">Attending</a></li>
-				<li><a href="#tabs-3">Administrator</a></li>
-			</ul>
-			<div id="tabs-1">
-				
-				<div id="accordion_resident">
-				<h3>Incomplete Assignments</h3>
-				<div>List of assignments with percent complete, due date and who assigned it.</div>
-				<h3>Completed Assignments</h3>
-				<div>List of completed assignments with score/percent correct listed.</div>
-				<h3>Results</h3>
-				<div>Generate some sort of graphical depiction of resident's overall results.</div>
-				</div>
-				
-				
-			</div>
-			<div id="tabs-2">
-				
-				<div id="accordion_attending">
-				<h3>Incomplete Assignments</h3>
-				<div>List of last 10 assignments with percent complete, due date, who it is assigned to and option to edit/delete assignment.</div>
-				<h3>Completed Assignments</h3>
-				<div>List of last 10 completed assignments with date completed, who completed it and score/percent correct.</div>
-				<h3>Create Assignment</h3>
-				<div>Quick assignment by allowing selection of resident, due date and module to assign and link to advanced assignment editor.</div>
-				</div>
+		<!-- SIDE NAVBAR of Questions -->
+		
+		<!-- SELECT * FROM questions WHERE 
+		<ol>
+			
+			
+		</ol>
+		
+		
+		<!-- 
+		
+		<!-- SELECT q_stem, ans_form FROM questions WHERE question_id - current_q -->
 
-			</div>
-			<div id="tabs-3">
+		<!--  stem -->
+		
+		<!--  images -->
+		<!-- SELECT stack_num, image_num, label, url FROM images WHERE question_id = current_q 
+				by default stack_num and image_num are 0 if only one image 
+				url may be a hash of q_id+stack_num+image_num ... all stored in a single directory?
+				
+				if(stack_num > 0)
+				{
+					//create carosel on top with middle image from each stack
+					
+					if(image_num > 0)
+					//create ul for stack of images that float on top of each other?
+					
+					
+				}
+				else
+					//just display single image url
+		
+		<!-- answer form 
+			[STANDARDIZE MCQ RESULT FROM FORM]
 			
-				List of links to administrative functions...
-			
-			</div>
-		</div><!--CLOSE div_tabs -->
+			-->
+		
+		<!-- on_submit UPDATE answers SET result=form_result ajax, load next q -->
 
 		
 	</div><!--CLOSE div_main-->

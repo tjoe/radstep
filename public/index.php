@@ -1,14 +1,9 @@
 <?php
-require_once("./include/authentication_config.php");
 
-if(isset($_POST['submitted']))
-{
-   if($rsauth->Login())
-   {
-        $rsauth->RedirectToURL("usermain.php");
-   }
-}
-
+	require_once("./include/radstep.php");
+	require_once("./include/user.php");
+	$USER = new User();
+	
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
@@ -23,14 +18,21 @@ if(isset($_POST['submitted']))
 		<meta name="designer" content="TxJxO" />
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
+		<meta charset="utf-8"/>
 		
 		<title>RadSTEP</title>
 	
 	
 	<link rel="stylesheet" type="text/css" href="css/default.css" />
 	<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+	
+	<!-- from rsauth package...just the styling -->
 	<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
-    <script type='text/javascript' src='lib/gen_validatorv4.js'></script>
+    
+    <!-- from user.php authentication class -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/userstyle.css"></link>-->
+    <script type="text/javascript" src="lib/sha1.js"></script>
+	<script type="text/javascript" src="lib/user.js"></script>
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,62 +74,68 @@ if(isset($_POST['submitted']))
 	<div id="div_mainpage">
 	
 	<div id="div_header" style="text-align:center;margin:0 auto;">
-		<h1 style="text-align:center;letter-spacing: 1.5em;">RadSTEP</h1>
+		<h1 style="text-align:center;letter-spacing: 1.1em;">RadSTEP</h1>
 		<h3 style="letter-spacing: 1em; font-variant: small-caps;">alpha build</h3>
 	</div><!--div_header-->
 	
 	<div id="div_main" style="margin:0 auto;">
 
 		<div id="div_login">
+
+		
+		
+		<?php
+
+			if(!$USER->authenticated) { ?>
 				
-		<!-- Form Code Start -->
-		<div id='div_rsauthform'>
-		<form id='login' action='<?php echo $rsauth->GetSelfScript(); ?>' method='post' accept-charset='UTF-8'>
-		<fieldset >
-		<legend>Login</legend>
+			<div id='div_rsauthform'>
+			<!-- Allow a user to log in -->
+			<form class="controlbox" name="log in" id="login" action="index.php" method="POST">
+				
+				<fieldset >
+				<legend>Login</legend>
 		
-		<input type='hidden' name='submitted' id='submitted' value='1'/>
+				<input type="hidden" name="op" value="login"/>
+				<input type="hidden" name="sha1" value=""/>
+				
+				<div class="container">
+				<label for="username" >Username/E-mail*:</label><br/>
+				<input type="text" name="username" maxlength="50" value="" style="border:solid 1px #888; height:32px;font:18px sans-serif;"  />
+				</div>
+				
+				<div class="container">
+				<label for="password1" >Password*:</label><br/>
+		    	<input type="password" name="password1" value=""  maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />
+				</div>
+				
+				<div class="container">
+				<input type="button" value="log in" onclick="User.processLogin()"/>
+				</div>
+				
+				<div class="short_explanation"><a href="resetpwd.php">Forgot Password?</a></div>
+				
+				</fieldset>
+				
+				<div><span class="error">
+				<?php if($USER->error!="") { ?>
+				Error: <?php echo $USER->error; ?>
+				<?php } ?>
+				</span></div>
+				
+				
+				
+			</form>
 		
-		<div class='short_explanation'>* required fields</div>
+		</div><!--div_rsauthform-->
 		
-		<div><span class='error'><?php echo $rsauth->GetErrorMessage(); ?></span></div>
-		<div class='container'>
-		    <label for='username_email' >Username/E-mail*:</label><br/>
-		    <input type='text' name='username_email' id='username_email' value='<?php echo $rsauth->SafeDisplay('username_email') ?>' maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" /><br/>
-		    <span id='login_username_errorloc' class='error'></span>
-		</div>
-		<div class='container'>
-		    <label for='password' >Password*:</label><br/>
-		    <input type='password' name='password' id='password' maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" /><br/>
-		    <span id='login_password_errorloc' class='error'></span>
-		</div>
+		<?php 		} //endif(!$USER->authenticated) 
+		else{ 
+			
+			// $USER->authenticated == true 
+			// then redirect to usermain.php
+			redirect("./usermain.php");
+		}?>
 		
-		<div class='container'>
-		    <input type='submit' name='Submit' value='Submit' />
-		</div>
-		<div class='short_explanation'><a href='reset-pwd-req.php'>Forgot Password?</a></div>
-		</fieldset>
-		</form>
-		<!-- client-side Form Validations:
-		Uses the excellent form validation script from JavaScript-coder.com-->
-		
-		<script type='text/javascript'>
-		// <![CDATA[
-		
-		    var frmvalidator  = new Validator("login");
-		    frmvalidator.EnableOnPageErrorDisplay();
-		    frmvalidator.EnableMsgsTogether();
-		
-		    frmvalidator.addValidation("username_email","req","Please provide your username");
-		    
-		    frmvalidator.addValidation("password","req","Please provide the password");
-		
-		// ]]>
-		</script>
-		</div>
-		<!--
-		Form Code End
-		-->
 		</div><!--CLOSE div_login-->
 		
 		
@@ -141,7 +149,9 @@ if(isset($_POST['submitted']))
 		
 
 	<!-- DEBUGGING -->
-	<div id="div_debug" class="debug"></div>
+	<div id="div_debug" class="debug">
+		
+	</div>
 		
 
 		
