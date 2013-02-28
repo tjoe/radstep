@@ -50,6 +50,8 @@
 	
 	/** INITIALIZATION **/
 	
+	/*
+	
 	//autmatically adds random num to get ajax requests to prevent browser caching	
 	$.ajaxSetup({cache:false}); 
 	
@@ -57,8 +59,17 @@
 	$(document).ajaxError(function(event, xhr, settings, exception){ 
 			alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
 	});
-	
-	
+	*/
+	$("#txtbox_username").keyup(function(event){
+    if(event.keyCode == 13)
+    {
+        $("#btn_login").click();
+    }});
+	$("#txtbox_password").keyup(function(event){
+    if(event.keyCode == 13)
+    {
+        $("#btn_login").click();
+    }});
 	
 	}); //close jquery(document).ready
 	
@@ -88,33 +99,37 @@
 
 			if(!$USER->authenticated) { ?>
 				
-			<div id='div_rsauthform'>
+			<div id="div_rsauthform">
 			<!-- Allow a user to log in -->
 			<form class="controlbox" name="log in" id="login" action="index.php" method="POST">
 				
-				<fieldset >
+				<fieldset>
 				<legend>Login</legend>
 		
 				<input type="hidden" name="op" value="login"/>
 				<input type="hidden" name="sha1" value=""/>
 				
 				<div class="container">
-				<label for="username" >Username/E-mail*:</label><br/>
-				<input type="text" name="username" maxlength="50" value="" style="border:solid 1px #888; height:32px;font:18px sans-serif;"  />
+				<label for="username">E-mail Address (Username)*:</label><br/>
+				<input id="txtbox_username" type="text" name="username" maxlength="50" value="" style="border:solid 1px #888; height:32px;font:18px sans-serif;"  />
 				</div>
 				
 				<div class="container">
 				<label for="password1" >Password*:</label><br/>
-		    	<input type="password" name="password1" value=""  maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />
+		    	<input id="txtbox_password" type="password" name="password1" value=""  maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />
 				</div>
 				
 				<div class="container">
-				<input type="button" value="log in" onclick="User.processLogin()"/>
+				<!--use input type="button" instead of "submit" b/c want to client-side validate before submitting form -->
+				<input id="btn_login" type="button" value="Login" onclick="User.processLogin()"/>
 				</div>
 				
-				<div class="short_explanation"><a href="resetpwd.php">Forgot Password?</a></div>
+				<div class="short_explanation"><a href="resetpwd.php">Forgot Password...</a></div>
+				<div class="short_explanation"><a href="register.php">Register...</a></div>
 				
-				</fieldset>
+				<div id="div_clientSideError" class="container error"></div>
+				
+
 				
 				<div><span class="error">
 				<?php if($USER->error!="") { ?>
@@ -122,7 +137,7 @@
 				<?php } ?>
 				</span></div>
 				
-				
+				</fieldset>
 				
 			</form>
 		

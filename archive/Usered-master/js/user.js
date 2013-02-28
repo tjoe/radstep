@@ -3,8 +3,6 @@
  */
 
 User = {
-	
-	
 	/**
 	 * generates a random hex string
 	 */
@@ -22,11 +20,7 @@ User = {
 		var classes = "";
 		if(input.class) { classes = input.getAttribute("class"); }
 		input.setAttribute("class", classes + " error");
-		//input.title = reason;
-		
-		var errordiv = document.getElementById('div_clientSideError');
-		if(errordiv){ errordiv.innerText = reason; }
-		
+		input.title = reason;
 		return false; },
 
 	/**
@@ -113,8 +107,7 @@ User = {
 		var valid = true;
 		var form = document.getElementById('registration');
 
-		// MODIFICATION: using only email address as username...no username input field
-		//valid &= this.validName(form["username"]);
+		valid &= this.validName(form["username"]);
 		valid &= this.validEmail(form["email"]);
 		valid &= this.passwordMatch(form["password1"], form["password2"]);
 		valid &= this.strongPassword(form["password1"]);
@@ -208,7 +201,7 @@ User = {
     add(form, make("input", {id: "usered_username", type: "text"}));
     add(form, make("label", {for: "usered_password", innerHTML: "password"}));
     add(form, make("input", {id: "usered_password", type: "password"}));
-    add(form, make("input", {id: "usered_login_button", type: "submit", value: "Login"}));
+    add(form, make("input", {id: "usered_login_button", type: "submit", value: "log in"}));
     add(parent, form);
   },
 
@@ -222,7 +215,7 @@ User = {
 
     var form = make("form", {id: "usered_logout_form", action: ".", method: "POST"});
     add(form, make("input", {type: "hidden", name: "op", value: "logout"}));
-    add(form, make("input", {id: "usered_logout_button", type: "submit", value: "Logout"}));
+    add(form, make("input", {id: "usered_logout_button", type: "submit", value: "log out"}));
     add(parent, form)
   }
 };

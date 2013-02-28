@@ -84,7 +84,7 @@ class RadStepAuthentication{
         return true;
     }
 	
-	//
+	
 	function CheckLoginInDB($username_email,$password)
     {
     	$this->DBConnect();
@@ -150,6 +150,175 @@ class RadStepAuthentication{
          return true;
     }
 	
+	  function EmailResetPasswordLink()
+    {
+        if(empty($_POST['email']))
+        {
+            $this->HandleError("Email is empty!");
+            return false;
+        }
+        $user_rec = array();
+        if(false === $this->GetUserFromEmail($_POST['email'], $user_rec))
+        {
+            return false;
+        }
+        if(false === $this->SendResetPasswordLink($user_rec))
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    function ResetPassword()
+    {
+        if(empty($_GET['email']))
+        {
+            $this->HandleError("Email is empty!");
+            return false;
+        }
+        if(empty($_GET['code']))
+        {
+            $this->HandleError("reset code is empty!");
+            return false;
+        }
+        $email = trim($_GET['email']);
+        $code = trim($_GET['code']);
+        
+		$user_rec = array();
+		
+		if(!$this->GetUserFromEmail($email,$user_rec))
+        {
+            return false;
+        }
+		
+        if($user_rec['password'] != $code)
+        {
+            $this->HandleError("Bad reset code!");
+            return false;
+		}
+		
+		$new_password = 
+		ChangePasswordInDB
+        
+        $new_password = $this->ResetUserPasswordInDB($user_rec);
+        if(false === $new_password || empty($new_password))
+        {
+            $this->HandleError("Error updating new password");
+            return false;
+        }
+        
+        if(false == $this->SendNewPassword($user_rec,$new_password))
+        {
+            $this->HandleError("Error sending new password");
+            return false;
+        }
+        return true;
+    }
+
+
+    function GetUserFromEmail($email,&$user_rec)
+    {
+ 
+        $email = $this->SanitizeForSQL($email);
+        	 
+        $results = $this->db->query("SELECT * FROM '$this->$db_userstablename' WHERE email='$email'");  
+
+        $result = $result->fetchArray();
+        if(!$result)
+        {
+            $this->HandleError("There is no user with email: $email");
+            return false;
+        }else
+			{
+				$user_rec = $result;
+			}
+        
+        return true;
+    }
+	
+	
+	function SendResetPasswordLink($user_rec)
+    {
+        $email = $user_rec['email'];
+        
+        $mailer = new PHPMailer();
+        
+        $mailer->CharSet = 'utf-8';
+        
+        $mailer->AddAddress($email,$user_rec['name']);
+        
+        $mailer->Subject = "Your reset password request at ".$this->sitename;
+
+        $mailer->From = $this->GetFromAddress();
+        
+		$code = uniqid();
+		
+		$this->ChangePasswordInDB($user_rec, $code);
+		
+        $link = $this->GetAbsoluteURLFolder().'/resetpwd.php?email='.urlencode($email).'&code='.urlencode($code);
+
+        $mailer->Body ="Hello ".$user_rec['name']."\r\n\r\n".
+        "There was a request to reset your password at ".$this->sitename."\r\n".
+        "Please click the link below to complete the request: \r\n".$link."\r\n".
+        "Regards,\r\n".
+        "Webmaster\r\n".
+        $this->sitename;
+        
+        if(!$mailer->Send())
+        {
+            return false;
+        }
+        return true;
+    }
+	
+	function ChangePasswordInDB($user_rec, $newpwdhash)
+    {
+        $newpwdhash = $this->SanitizeForSQL($newpwdhash);
+        
+		try{
+			$db->query("UPDATE ".$this->$db_userstablename." SET password='".$newpwdhash."' WHERE userid=".$user_rec['userid']);
+		}catch (Exception $e){
+			$this->HandleError("Update password failed!".'\n'.$e);
+            return false;
+		}
+		
+        return true;
+    }
+	
+
+		
+	//PRIVATE HELPER FUNCTIONS
+    
+    function HandleError($err)
+    {
+        $this->error_message .= $err."\r\n";
+    }
+    
+    function HandleDBError($err)
+    {
+        $this->HandleError($err."\r\n mysqlerror:".mysql_error());
+    }
+    
+    function GetFromAddress()
+    {
+        if(!empty($this->from_address))
+        {
+            return $this->from_address;
+        }
+
+        $host = $_SERVER['SERVER_NAME'];
+
+        $from ="nobody@$host";
+        return $from;
+    } 
+    
+    function GetLoginSessionVar()
+    {
+        $retvar = md5($this->rand_key);
+        $retvar = 'usr_'.substr($retvar,0,10);
+        return $retvar;
+    }
+    
     //PUBLIC HELPER FUNCTIONS
     function HandleError($err)
     {
@@ -172,7 +341,12 @@ class RadStepAuthentication{
         }
         return htmlentities($_POST[$value_name]);
     }
-	
+	function GetAbsoluteURLFolder()
+    {
+        $scriptFolder = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) ? 'https://' : 'http://';
+        $scriptFolder .= $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']);
+        return $scriptFolder;
+    }
 	function GetErrorMessage()
     {
         if(empty($this->error_message))

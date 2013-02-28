@@ -3,10 +3,16 @@
 	require_once("./include/radstep.php");
 	require_once("./include/user.php");
 	$USER = new User();
+
 	
 	if(!$USER->authenticated){
 		redirect("./index.php");
 		exit;
+	}else{
+	
+	$is_faculty = (strpos("Faculty",$USER->role) !== false);
+	$is_resident = (strpos("Resident",$USER->role) !== false);
+	
 	}
 	
 ?>
@@ -33,7 +39,6 @@
 	<link href="css/smoothness/jquery-ui-1.9.2.min.css" rel="stylesheet" type="text/css" />
 	<script src="lib/jquery-ui-1.9.2.min.js"></script>
 	<link href="css/rsauth.css" rel="stylesheet" type="text/css" />
-    <script src='lib/gen_validatorv4.js' type='text/javascript'></script>
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -51,6 +56,7 @@
 	
 	/** INITIALIZATION **/
 	
+	
 	//autmatically adds random num to get ajax requests to prevent browser caching	
 	$.ajaxSetup({ cache: false });
 	
@@ -59,12 +65,11 @@
 		alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
 	});
 	
-	//if multiple roles:
+
 	$( "#div_tabs" ).tabs();
-	//if resident
+	
+	$( "#accordion_faculty" ).accordion();
 	$( "#accordion_resident" ).accordion();
-	//if attending
-	$( "#accordion_attending" ).accordion();
 	
 	}); //close jquery(document).ready
 	
@@ -85,32 +90,30 @@
 	
 	<div id="div_main" style="margin:0 auto;">
 	
-		<h2>Welcome, <? echo $_SESSION['name_of_user'] ?>. </h2>
+		<h2>Welcome, <? echo $USER->email ?> </h2>
 
 		<!-- Tabs -->
-		<h2>RadSTEP Roles</h2>
 		<div id="div_tabs">
+			<!-- Log out option -->
+			<div id="div_logout" style="float:right;margin-top:5px;margin-right:10px;">
+			<form class="controlbox" name="log out" id="logout" action="index.php" method="POST">
+				<input type="hidden" name="op" value="logout"/>
+				<input type="hidden" name="username"value="<?php echo $_SESSION["username"]; ?>" />
+				<input type="submit" value="Logout"/>
+			</form>
+			</div><!--div_logout-->
+			
 			<ul>
-				<li><a href="#tabs-1">Resident</a></li>
-				<li><a href="#tabs-2">Attending</a></li>
-				<li><a href="#tabs-3">Administrator</a></li>
+				<li><a href="#tab_resident">Resident</a></li>
+				<?php if ($is_faculty) { ?> <li><a href="#tab_faculty">Faculty</a></li> <?php } ?>
+				<?php if ($is_resident) { ?> <li><a href="#tab_account">Account Options</a></li> <?php } ?>
 			</ul>
-			<div id="tabs-1">
+			
+			<!-- FACULTY TAB -->
+			<?php if ($is_faculty) { ?>
+			<div id="tab_faculty">
 				
-				<div id="accordion_resident">
-				<h3>Incomplete Assignments</h3>
-				<div>List of assignments with percent complete, due date and who assigned it.</div>
-				<h3>Completed Assignments</h3>
-				<div>List of completed assignments with score/percent correct listed.</div>
-				<h3>Results</h3>
-				<div>Generate some sort of graphical depiction of resident's overall results.</div>
-				</div>
-				
-				
-			</div>
-			<div id="tabs-2">
-				
-				<div id="accordion_attending">
+				<div id="accordion_faculty">
 				<h3>Incomplete Assignments</h3>
 				<div>List of last 10 assignments with percent complete, due date, who it is assigned to and option to edit/delete assignment.</div>
 				<h3>Completed Assignments</h3>
@@ -120,10 +123,67 @@
 				</div>
 
 			</div>
-			<div id="tabs-3">
+			<?php } ?>
 			
-				List of links to administrative functions...
 			
+			<!-- RESIDENT TAB -->
+			<?php if ($is_resident) { ?>
+			<div id="tab_resident">
+
+				<div id="accordion_resident">
+				<h3>Incomplete Assignments</h3>
+				<div>List of assignments with percent complete, due date and who assigned it.</div>
+				<h3>Completed Assignments</h3>
+				<div>List of completed assignments with score/percent correct listed.</div>
+				<h3>Results</h3>
+				<div>Generate some sort of graphical depiction of resident's overall results.</div>
+				</div>
+			
+			</div>
+			<?php } ?>
+			
+			<!-- ACCOUNT MGMT for EVERY USER -->
+			<div id="tab_account">
+			
+			<!-- Log out option -->
+			<h3>Logout</h3>
+			<form class="controlbox" name="log out" id="logout" action="index.php" method="POST">
+				<input type="hidden" name="op" value="logout"/>
+				<input type="hidden" name="username" value="<?php echo $_SESSION["username"]; ?>" />
+				<input type="submit" value="Logout"/>
+			</form>
+			
+			<!-- Request a new password from the system -->
+			<h3>Reset Password</h3>
+			<form class="controlbox" name="forgotten passwords" id="reset" action="index.php" method="POST">
+				<input type="hidden" name="op" value="reset"/>
+				<input type="hidden" name="email" value="<?php $USER->email; ?>" />
+				<input type="submit" value="Reset Password"/>
+			</form>
+
+
+			<!-- If a user is logged in, her or she can modify their email and password -->
+			<h3>Update Email Address and Password</h3>
+			<form class="controlbox" name="update" id="update" action="index.php" method="POST">
+				<input type="hidden" name="op" value="update"/>
+				<input type="hidden" name="sha1" value=""/>
+				<p>Update your email address and/or password here</p>
+				<table>
+					<tr><td>email address </td><td><input type="text" name="email" value="<?php $USER->email; ?>" /></td></tr>
+					<tr><td>new password </td><td><input type="password" name="password1" value="" /></td></tr>
+					<tr><td>new password (again) </td><td><input type="password" name="password2" value="" /></td></tr>
+				</table>
+				<input type="button" value="Update" onclick="User.processUpdate()"/>
+			</form>
+
+			<!-- If a user is logged in, they can elect to unregister -->
+			<h3>Unregister/Delete Account</h3>
+			<h4>WARNING: CANNOT BE UNDONE</h4>
+			<form class="controlbox" name="unregister" id="unregister" action="index.php" method="POST">
+				<input type="hidden" name="op" value="unregister"/>
+				<input type="hidden" name="username"value="<?php echo $_SESSION["username"]; ?>" />
+				<input type="submit" value="Unregister"/>
+			</form>
 			</div>
 		</div><!--CLOSE div_tabs -->
 
