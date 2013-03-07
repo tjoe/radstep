@@ -6,6 +6,9 @@
 	 *	Whenever a user logs in successfully, his or her database
 	 *	entry is assigned a new random token,  which is used in
 	 * salting subsequent password checks.
+	 * 
+	 *  This code is hosted on github, at http://github.com/Pomax/Usered
+	 * 
 	 */
 	 
 

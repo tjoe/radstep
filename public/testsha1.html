@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+ 
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		
+		<title>RadSTEP</title>
+	
+	
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
+	<script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
+    <script type="text/javascript" src="include/RadStep/sha1.js"></script>
+	<!--<script type="text/javascript" src="include/RadStep/user.js"></script>-->
+	
+	<style type="text/css">
+		.debug{ display:none; }
+	</style>
+
+
+
+	<script type="text/javascript">
+
+	jQuery(document).ready(function(){
+	
+	$("#btn_login").click(function(event){
+    	
+    	var pw1 = $("#txtbox_password").val();
+    	var sha1 = Sha1.hash(pw1);
+    	$("#div_clientSideError").text(sha1);
+    });
+    
+    $("#txtbox_password").keyup(function(event){
+    if(event.keyCode == 13)
+    {
+        $("#btn_login").click();
+    }});
+
+    
+
+	
+	}); //close jquery(document).ready
+	
+	</script>
+	
+	
+	</head>
+	
+	
+	<body style="margin:0 auto; padding:0px;">
+
+
+	<div id="div_mainpage">
+
+	<div id="div_main" style="margin:0 auto;">
+
+		<div id="div_login">
+				
+			<div>
+
+			<form name="form_login" id="login" action="#" method="POST">
+				
+				<input id="txtbox_password" type="text" name="password1" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />	
+				<input id="btn_login" type="button" value="Hash" />
+
+				<div id="div_clientSideError" class="container error"></div>
+				
+			</form>
+		
+		</div><!--div_rsauthform-->
+		
+
+		</div><!--CLOSE div_login-->
+		
+		
+	</div><!--CLOSE div_main-->
+
+		
+	</div><!-- div_mainpage -->
+	
+
+
+		
+
+	<!-- DEBUGGING -->
+	<div id="div_debug" class="debug">
+		
+	</div>
+		
+
+		
+	</body>
+</html>

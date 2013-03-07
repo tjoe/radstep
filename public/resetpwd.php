@@ -1,24 +1,17 @@
 <?php
-
-	// this is a demonstrator function, which gets called when new users register
-	function registration_callback($username, $email, $userdir)
-	{
-		// all it does is bind registration data in a global array,
-		// which is echoed on the page after a registration
-		global $data;
-		$data = array($username, $email, $userdir);
-	}
-
-	require_once("./include/radstep.php");
-	require_once("./include/user.php");
-	$USER = new User("registration_callback");
 	
+	require_once("./include/debuggers.php");
+	require_once("./include/globals.php");
+	
+	require_once("./include/RadStep/RadStepCommon.php");
+	
+	$USER = new RadStep\User();
+
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
  
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 		<meta name="description" content="Radiology Training Application" />
@@ -33,15 +26,22 @@
 	
 	
 	<link rel="stylesheet" type="text/css" href="css/default.css" />
-	<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+	<!-- USE jquery +  jqueryui CDNs
+		
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+		<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+		
+	-->
 	
 	<!-- from rsauth package...just the styling -->
 	<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
     
     <!-- from user.php authentication class -->
     <!-- <link rel="stylesheet" type="text/css" href="css/userstyle.css"></link>-->
-    <script type="text/javascript" src="lib/sha1.js"></script>
-	<script type="text/javascript" src="lib/user.js"></script>
+    <script type="text/javascript" src="include/RadStep/sha1.js"></script>
+	<script type="text/javascript" src="include/RadStep/user.js"></script>
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -85,10 +85,11 @@
 
 	<div id="div_mainpage">
 	
-	<div id="div_header" style="text-align:center;margin:0 auto;">
-		<h1 style="text-align:center;letter-spacing: 1.1em;">RadSTEP</h1>
-		<h3 style="letter-spacing: 1em; font-variant: small-caps;">alpha build</h3>
-	</div><!--div_header-->
+	<?php
+	
+		insertDivHeader();
+	
+	?>
 	
 	<div id="div_main" style="margin:0 auto;">
 
@@ -101,13 +102,14 @@
 				
 			<div id='div_rsauthform'>
 			<!-- Request a new password from the system -->
-			<form class="controlbox" name="forgotten passwords" id="reset" action="index.php" method="POST">
+			<form class="controlbox" name="forgotten passwords" id="reset" action="resetpwd.php" method="POST">
 				<fieldset>
 				<legend>Reset Password</legend>
 				
 				<input type="hidden" name="op" value="reset"/>
 				
 				<div class="container">
+				<label for="email">E-mail Address (Username)*:</label><br/>
 				<input type="text" name="email" value="<?php $USER->email; ?>" />
 				</div>
 				

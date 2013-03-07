@@ -1,48 +1,104 @@
-<?PHP
-require_once("./include/authentication_config.php");
+<?php
 
-if(!$rsauth->CheckLogin())
-{
-    $rsauth->RedirectToURL("index.php");
-    exit;
-}
-
+	require_once("./include/debuggers.php");
+	require_once("./include/globals.php");
+	
+	require_once("./include/RadStep/RadStepCommon.php");
+	
+	$USER = new RadStep\User();
+	
+	if(!$USER->authenticated){
+		redirect("./index.php");
+		exit;
+	}else{
+	
+		$is_faculty = (strpos($USER->role, "Faculty") !== false);
+		$is_resident = (strpos($USER->role, "Resident") !== false);
+		
+		$assignment_id=$_GET["assignment_id"];
+		$assignment = new RadStep\Assignment($assignment_id);
+		
+		$review_mode = false;	
+		if($is_faculty || $assignment->status == RadStep\Assignment::COMPLETE)
+			$review_mode = true;
+		
+		//check if USER matches assigned_by or assigned_to field
+		if($USER->username == $assignment->assigned_by || $USER->username == $assignment->assigned_to)
+		{
+		
+		$question_list = $assignment->questions;
+	
+		//load current question_index
+		$current_question = 1;
+		
+		
+		}else{
+			echo("Sorry, you are not associated with this assignment");
+			
+		}//endif username matches assignment
+		
+	}//endif authenticated
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
  
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
+	<head>
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-		<meta name="description" content="Radiology Training Application" />
-		<meta name="keywords" content="radiology, education" />
-		<meta name="author" content="Thomas O'Neill c/o TTUHSC El Paso" />
-		<meta name="designer" content="TxJxO" />
-		<meta name="robots" content="index, follow" />
-		<meta name="googlebot" content="index, follow" />
+		<meta charset="utf-8"/>
 		
 		<title>RadSTEP</title>
 	
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+		<!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
+		
+		<!-- from rsauth package...just the styling -->
+		<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
+		
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 	
-	<link href="css/default.css" rel="stylesheet" type="text/css" />
-	<script src="lib/jquery-1.8.3.min.js" type="text/javascript"></script>
-	<link href="css/smoothness/jquery-ui-1.9.2.min.css" rel="stylesheet" type="text/css" />
-	<script src="lib/jquery-ui-1.9.2.min.js"></script>
-	<link href="css/rsauth.css" rel="stylesheet" type="text/css" />
-    <script src='lib/gen_validatorv4.js' type='text/javascript'></script>
-	
-	<!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
-	<style type="text/css">
-		.debug{ display:none; }
-	</style>
+		<style type="text/css">
+		
+			#div_question{
+				float:left;
+				width:*;
+				margin-left: 135px;
+    			margin-top: 5px;
+			}
+			#div_question_list{
+				float:left;
+				width:80px
+			}
+			#ul_question_list{
+				list-style: none;
+				width:100%;
+			}
+			#ul_question_list li{
+				height:12pt;
+				background-color:#6D7B8D;
+				color:#ffffff;
+				margin:2px;
+				padding: 4px;
+				font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+				text-align:center;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			#ul_question_list li:hover {
+				background-color:#B4BEC3;
+			}
+			
+			.debug{ display:none; }
+		</style>
 
 
 
 	<script type="text/javascript">
+
 
 	jQuery(document).ready(function(){
 	
@@ -57,8 +113,14 @@ if(!$rsauth->CheckLogin())
 	});
 	
 
-
-
+	
+	$("#ul_question_list li").click(function(){
+		// var question_index = $(this).index();
+		var q_id = $(this).attr("id").replace("q_",""); //removes the prefix added to each question id
+		$("#div_question").load("question.php", {"question_id": q_id }); 
+    	
+	});
+	 
 
 	
 	}); //close jquery(document).ready
@@ -73,58 +135,32 @@ if(!$rsauth->CheckLogin())
 
 	<div id="div_mainpage">
 	
-	<div id="div_header" style="text-align:center;margin:0 auto;">
-		<h1 style="text-align:center;letter-spacing: 15px;">RadSTEP</h1>
-		<h3 style="letter-spacing: 10px; font-variant: small-caps;">alpha build</h3>
-	</div><!--div_header-->
+	<?php
+	
+		insertDivHeader();
+	
+	?>
 	
 	<div id="div_main" style="margin:0 auto;">
 	
-		<h3><? echo $_SESSION['name_of_user'] ?></h3>
+		<div style="clear:both;"></div>
 		
-		<!-- SELECT qset_id FROM assignments WHERE assignment_id=$_GET['assignment_id'] -->
-		<!-- check that user_id in assignment matches the current users id, if completed = set review mode, if not completed = set exam mode -->
+		<div id="div_question_list">
+		<!-- Question List -->
+		<ul id="ul_question_list">
+		<!-- TODO: if status = completed = set review mode, if not completed = set exam mode -->
+		<!-- TODO: TIMER at top of total time elapsed while on this page, autosubmit assignment if exceeds timelimit -->	
+		<?php foreach($question_list as $question_number => $question_id){ ?>
+			<li id="<?="q_".$question_id ?>"><?= $question_number+1 ?></li>
+		<?php } ?>
+		</ul>
+		</div><!--CLOSE div_question_list-->
 		
-		<!-- SELECT q_id FROM qset_questions WHERE qset_id = 'assignment_qset_id' -->
+		<!-- Question -->
 		
-		<!-- TIMER at top of total time elapsed while on this page, autosubmit assignment if exceeds timelimit -->
-
-		<!-- SIDE NAVBAR of Questions -->
+		<div id="div_question">
+		</div>
 		
-		<!-- SELECT * FROM questions WHERE 
-		<ol>
-			
-			
-		</ol>
-		
-		
-		<!-- 
-		
-		<!-- SELECT q_stem, ans_form FROM questions WHERE question_id - current_q -->
-
-		<!--  stem -->
-		
-		<!--  images -->
-		<!-- SELECT stack_num, image_num, label, url FROM images WHERE question_id = current_q 
-				by default stack_num and image_num are 0 if only one image 
-				url may be a hash of q_id+stack_num+image_num ... all stored in a single directory?
-				
-				if(stack_num > 0)
-				{
-					//create carosel on top with middle image from each stack
-					
-					if(image_num > 0)
-					//create ul for stack of images that float on top of each other?
-					
-					
-				}
-				else
-					//just display single image url
-		
-		<!-- answer form 
-			[STANDARDIZE MCQ RESULT FROM FORM]
-			
-			-->
 		
 		<!-- on_submit UPDATE answers SET result=form_result ajax, load next q -->
 

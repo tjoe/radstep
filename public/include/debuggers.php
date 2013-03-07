@@ -1,12 +1,5 @@
 <?php
 
-	// Globabl declarations
-	date_default_timezone_set("America/Denver");
-	
-	ini_set("display_errors", 1);
-	ini_set("error_reporting", E_ALL | E_STRICT);
-
-
 	/**** ChromePhp Debugger ****/
 	include 'ChromePhp.php';
 	//ChromePhp::log('hello world');
@@ -28,23 +21,5 @@
 	require_once('FirePHPCore/FirePHP.class.php');
 	ob_start();
 	/***** END FirePHP Debugger ****/
-
-
-
-
-	// Global functions
-	function redirect($url){
-		header("Location: ".$url);
-        exit;
-	}
-
-
-
-
-
-
-
-
-
 
 ?>

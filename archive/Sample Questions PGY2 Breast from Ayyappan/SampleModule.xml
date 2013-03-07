@@ -1,0 +1,153 @@
+<QuestionSet name="SampleModule" keywords="sample,breast,mammography,women's imaging" difficulty="medium" >
+
+	
+	<Question keywords="" difficulty="">
+		<Prompt>What are the American College of Radiology guidelines for screening mammography?</Prompt>
+ 
+		<Choice>Annually beginning at age 50 and continuing as long as the women is in good health</Choice>
+		<Choice>Annually beginning at age 40 and continuing as long as the women is in good health</Choice>
+		<Choice>Annually beginning at age 40 and continuing until 80 years of age</Choice>
+		<Choice>Annually beginning at age 50 and continuing until 80 years of age</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>In an average-risk population what is the approximate cancer detection rate during prevalence (first-round) mammographic screening?</Prompt>
+ 
+		<Choice>Approximately 6-10 cancers per 1000 patients</Choice>
+		<Choice>Approximately 2-4 cancers per 1000 patients</Choice>
+		<Choice>Approximately 14-16 cancers per 1000 patients</Choice>
+		<Choice>Approximately 1-2 cancers per 1000 patients</Choice>
+	</Question>
+
+	<Question keywords="" difficulty="">
+		<Prompt>According to MQSA guidelines which quality control test should be performed on a weekly basis?</Prompt>
+ 
+		<Choice>Phantom image quality</Choice>
+		<Choice>Screen-film contact</Choice>
+		<Choice>Compression device performance</Choice>
+		<Choice>Radiation dose</Choice>
+	</Question>
+	  
+	<Question keywords="" difficulty="">
+		<Prompt>What are physician qualifications outlined in the American College of Radiology practice guidelines for ultrasound-guided breast interventional procedures?</Prompt>
+ 
+		<Choice>Minimum of 8 hours of Category 1 CME didactic instruction in ultrasound-guided biopsy techniques and performance of at least 12 biopsy procedures under the supervision of a qualified physician</Choice>
+		<Choice>The physician should perform at least 12 ultrasound-guided breast biopsies every 2 years</Choice>
+		<Choice>The physician should obtain at least 6 hours of Category 1 CME in ultrasound-guided breast biopsy every 3 years</Choice>
+		<Choice>Should meet the initial qualifications specified in the ACR Practice Guideline for the Performance of Screening and Diagnostic Mammography</Choice>
+	</Question>
+	
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Which of the following statements regarding mammographic positioning is TRUE?</Prompt>
+ 
+		<Choice>The standard MLO view may miss cancers in the medial aspect of the breast</Choice>
+		<Choice>Motion blur occurs most often in the superior breast on MLO views</Choice>
+		<Choice>The difference between the posterior nipple line measurement on the mediolateral oblique and craniocaudal views should ideally exceed 1 cm</Choice>
+		<Choice>CC view should be positioned to include as much lateral tissue as possible without rotating the nipple from the midline</Choice>
+	</Question>    
+ 
+	
+	<Question keywords="" difficulty="">
+		<Prompt>In mammography, adequate breast compression results in all of the following EXCEPT</Prompt>
+ 
+		<Choice>Reduced scatter radiation</Choice>
+		<Choice>Reduced radiation dose</Choice>
+		<Choice>Reduced exposure dynamic range</Choice>
+		<Choice>Elimination of grid</Choice>
+	</Question>
+
+	<Question keywords="" difficulty="">
+		<Prompt>Which of the following statements regarding digital mammography is FALSE?</Prompt>
+ 
+		<Choice>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Choice>
+		<Choice>Digital technology detects significantly more cancers than film screen in women with dense breasts</Choice>
+		<Choice>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+		<Choice>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+	</Question>
+     
+ 	<Question keywords="" difficulty="">
+		<Prompt>Which of the following statements regarding digital mammography is FALSE?</Prompt>
+ 
+		<Choice>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Choice>
+		<Choice>Digital technology detects significantly more cancers than film screen in women with dense breasts</Choice>
+		<Choice>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+		<Choice>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>The American Cancer Society recommends annual breast MRI screening for patients with</Prompt>
+ 
+		<Choice>A personal history of breast cancer, including ductal carcinoma insitu (DCIS)</Choice>
+		<Choice>Lobular carcinoma insitu (LCIS) or atypical lobular hyperplasia (ALH)</Choice>
+		<Choice>First-degree relative of BRCA carrier, but untested</Choice>
+		<Choice>Lifetime risk 15–20%, as defined by BRCAPRO or other models</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Concerning breast density, which of the following statements is FALSE?</Prompt>
+ 
+		<Choice>The most common cause for bilaterally symmetric increasing density is exogenous hormone therapy</Choice>
+		<Choice>The American Cancer Society recommends annual breast MRI screening for women with dense breasts and strong family history of breast cancer</Choice>
+		<Choice>Women with dense breasts are at increased risk of developing breast cancer compared to those with fatty breasts</Choice>
+		<Choice>Breast density can change with weight gain or loss</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Which of the following is the most significant prognostic factor for poor overall survival in patients with breast cancer?</Prompt>
+ 
+		<Choice>Lymphatic/vascular invasion</Choice>
+		<Choice>Her 2 Neu gene amplification and/or overexpression</Choice>
+		<Choice>Axillary lymph node status</Choice>
+		<Choice>Histologic grade</Choice>
+	</Question>
+	
+	 	<Question keywords="" difficulty="">
+		<Prompt>Craniocaudal and Mediolateral oblique mammograms of a 45-year-old female with a right breast mass. Based on the imaging appearance which of the following malignant neoplasm is MOST LIKELY?</Prompt>
+ 		<Image url="images\5137e8d08ac98.jpg" caption="" />
+		<Image url="images\5137e8ed3bcc8.jpg" caption="" />
+		<Choice>Tubular carcinoma</Choice>
+		<Choice>Papillary carcinoma</Choice>
+		<Choice>Triple negative invasive ductal carcinoma</Choice>
+		<Choice>Medullary carcinoma</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Gray scale ultrasound and color Doppler ultrasound images of a 50-year-old male with a right retroareolar mass. Based on the imaging appearance which of the following neoplasm is MOST LIKELY?</Prompt>
+ 		<Image url="images\5137e92fcc186.jpg" caption="" />
+		<Image url="images\5137e92e5cc85.jpg" caption="" />
+		<Choice>Invasive ductal carcinoma</Choice>
+		<Choice>Papillary neoplasm</Choice>
+		<Choice>Spindle cell neoplasm</Choice>
+		<Choice>Metastasis</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Concerning BI-RADS category 3 assessment, which of the following statements is FALSE?</Prompt>
+ 
+		<Choice>Use of probably benign assessment for a palpable lesion is not supported by scientific data</Choice>
+		<Choice>A finding placed in this category should have &lt;2%   risk of malignancy</Choice>
+		<Choice>When probably benign findings increase in size or extent during followup biopsy is indicated</Choice>
+		<Choice>About 5% of screening mammograms are assigned this category without additional imaging evaluation</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Pertaining to male breast diseases, which of the following statements is TRUE?</Prompt>
+ 
+		<Choice>Lipoma is the most common benign condition of the male breast</Choice>
+		<Choice>Cystic lesions are usually benign and often require no further workup</Choice>
+		<Choice>Eccentric location of a mass in relation to the nipple is highly suggestive of gynecomastia</Choice>
+		<Choice>Clinically suspicious lesions referred for imaging should be first evaluated with mammography</Choice>
+	</Question>
+	
+	<Question keywords="" difficulty="">
+		<Prompt>Craniocaudal and Mediolateral oblique mammograms of a 35-year-old lactating female with a right breast mass. Based on the imaging appearance which of the following is the most probable diagnosis?</Prompt>
+ 		<Image url="images\5137e9728921d.jpg" caption="" />
+		<Image url="images\5137e9734ead6.jpg" caption="" />
+		<Choice>Pregnancy-associated breast cancer</Choice>
+		<Choice>Granulomatous mastitis</Choice>
+		<Choice>Plasma cell mastitis</Choice>
+		<Choice>Juvenile papillomatosis</Choice>
+	</Question>
+
+</QuestionSet>

@@ -1,4 +1,8 @@
 <?php
+	namespace RadStep;
+	
+	use \PDO;
+	
 	/**
 	 *	A framework for simple user authentication.
 	 *
@@ -6,39 +10,34 @@
 	 *	Whenever a user logs in successfully, his or her database
 	 *	entry is assigned a new random token,  which is used in
 	 * salting subsequent password checks.
+	 * 
+	 *  This code is hosted on github, at http://github.com/Pomax/Usered
+	 * 
 	 */
-
 	class User
 	{
+
 		// =======================================================================
 		// IMPORTANT VALUES THAT YOU *NEED* TO CHANGE FOR THIS TO BE SECURE
 		// =======================================================================
-
+			
+			// Set to true to enable creation of user directories for each registered user
+			const use_user_dir = false;
+		
 			// Keeping this location on ./... means that it will be publically visible to all,
 			// and you need to use htaccess rules or some such to ensure no one
 			// grabs your user's data.
-
-			const USER_HOME = "./";
+			
+			const USER_HOME = "/home/ttuhscrads/ttuhscrads.com/private/users/";
 
 			// In order for users to be notified by email of certain things, set this to true.
 			// Note that the server you run this on should have sendmail in order for
 			// notification emails to work. Also note that password resetting doesn't work
 			// unless mail notification is turned on.
+			// 
 
 			const use_mail = true;
-
-			// This value should point to a directory that is not available to web users.
-			// If your documents are in ./public_html, for instance., then put database
-			// in something like ./database - that way, you don't have to rely on
-			// htaccess rules or the likes, because it's simply impossible to get to the
-			// database from a public, or private, URL.
-			//
-			// By default it's set to the stupidly dangerous and publically accessible same
-			// base dir as your web page. So change it, because people are going to try
-			// to download your database file. And succeed.
-
-			const DATABASE_LOCATION = "./";
-
+			
 			// if this is set to "true", registration failure due to known usernames is reported,
 			// and login failures are explained as either the wrong username or the wrong password.
 			// You really want to set this to 'false', but it's on true by default because goddamnit
@@ -54,39 +53,24 @@
 				picked is already taken.
 
 				Because these are mutually exclusive, you can't do both using this framework.
-				You can either use unsafe reporting, where the system will will tell you that
+				You can either use unsafe reporting, where the system will tell you that
 				a username exists, both during registration and login, or you can use safe
 				reporting, and then the system will reject registrations based on username
 				similarity, not exact match. But then it also won't say which of the username
 				or password in a login attempt was incorrect.
 			**/
 
-		// =======================================================================
-		// 	You can modify the following values, but they're not security related
-		// =======================================================================
-
-			// rename this to whatever you like
-			const DATABASE_NAME = "users";
 
 			// this is the session timeout. If someone hasn't performed any page requests
 			// in [timeout] seconds, they're considered logged out.
-			const time_out = 600;
+			const time_out = 36000; // 10 hours before it times out
 
-			// You'll probably want to change this to something sensible. If your site is
-			// www.sockmonkey.com, then you want this to be "sockmonkey.com"
-			const DOMAIN_NAME = "localhost";
 
-			// This is going to be the "from" address
-			const MAILER_NAME = "noreply@localhost";
-
-			// if you want people to be able to reply to a real address, override
-			// this variable to "yourmail@somedomain.ext" here.
-			const MAILER_REPLYTO = "noreply@localhost";
 
 		// =======================================================================
 		// 	Don't modify any variables beyond this point =)
 		// =======================================================================
-
+		
 		// this is the global error message. If anything goes wrong, this tells you why.
 		var $error = "";
 
@@ -138,23 +122,34 @@
 		// class object constructor
 		function __construct($registration_callback=false)
 		{
-			// session management comes first. Warnings are repressed with @ because it will warn if something else already called session_start()
+	
+			// session management comes first. Warnings are repressed with @ because it will warn if 
+			// something else already called session_start()
 			@session_start();
-			if (empty($_SESSION["username"]) || empty($_SESSION["token"])) $this->resetSession();
-
+			
+			if (empty($_SESSION["username"]) || empty($_SESSION["token"])){
+				$this->resetSession();
+			}
+				 
 			// file location for the user database
-			$dbfile = User::DATABASE_LOCATION  . User::DATABASE_NAME . ".db";
-
+			$dbfile = DATABASE_LOCATION . DATABASE_NAME . ".db";
+			
 			// do we need to build a new database?
 			$rebuild = false;
-			if(!file_exists($dbfile)) { $rebuild = true; }
+			if(!file_exists($dbfile)) $rebuild = true; 
 
-			// bind the database handler
+			// bind the database handler 
 			$this->database = new PDO("sqlite:" . $dbfile);
-
-			// If we need to rebuild, the file will have been automatically made by the PDO call,
-			// but we'll still need to define the user table before we can use the database.
-			if($rebuild) { $this->rebuild_database($dbfile); }
+			
+			/* Need to set permissions to chmod 664 if the database file is created by the
+			*  sqlite PDO driver the permissions are set to www-data:www-data 644 
+			* If we need to rebuild, the file will have been automatically made by the PDO call,
+			* but we'll still need to define the user table before we can use the database.
+			 */
+			if($rebuild) {
+				chmod($dbfile,0664);
+				$this->rebuild_database($dbfile); 
+			}
 
 			// finally, process the page request.
 			$this->process($registration_callback);
@@ -165,7 +160,15 @@
 		{
 			$this->info("rebuilding database as ".$dbfile);
 			$this->database->beginTransaction();
-			$create = "CREATE TABLE users (username TEXT UNIQUE, password TEXT, email TEXT UNIQUE, token TEXT, role TEXT, active TEXT, last TEXT);";
+			$create = "CREATE TABLE users (
+							user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+							username TEXT UNIQUE, 
+							password TEXT, 
+							email TEXT UNIQUE, 
+							token TEXT, 
+							role TEXT, 
+							active TEXT, 
+							last TEXT);";
 			$this->database->exec($create);
 			$this->database->commit();
 		}
@@ -174,9 +177,11 @@
 		function process(&$registration_callback=false)
 		{
 			$this->database->beginTransaction();
+			
 			if(isset($_POST["op"]))
 			{
 				$operation = $_POST["op"];
+				
 				// logging in or out, and dropping your registration, may change authentication status
 				if($operation == "login") { $this->authenticated = $this->login(); }
 				// logout and unregister will unset authentication if successful
@@ -188,20 +193,32 @@
 				// we only allow password resetting if we can send notification mails
 				elseif($operation == "reset" && User::use_mail) { $this->reset_password(); }
 			}
-
+			
 			// if the previous operations didn't authorise the current user,
 			// see if they're already marked as authorised in the database.
-			if(!$this->authenticated) {
+			if(!$this->authenticated) 
+			{
 				$username = $_SESSION["username"];
-				if($username != User::GUEST_USER) {
+				// not authenticated
+				if($username != User::GUEST_USER) 
+				{
+					// not guest user
 					$this->authenticated = $this->authenticate_user($username,"");
-					if($this->authenticated) { $this->mark_user_active($username); }}}
+					if($this->authenticated) 
+					{
+						 $this->mark_user_active($username); 
+					}
+				}
+			}
 
 			// at this point we can make some globals available.
 			$this->username = $_SESSION["username"];
-			$this->userdir = ($this->username !=User::GUEST_USER? User::USER_HOME . $this->username : false);
 			$this->email = $this->get_user_email($this->username);
 			$this->role = $this->get_user_role($this->username);
+			if(User::use_user_dir)
+			{
+			$this->userdir = ($this->username !=User::GUEST_USER? User::USER_HOME . $this->username : false);
+			}
 
 			// clear database
 			$this->database->commit();
@@ -217,11 +234,10 @@
 		 */
 		function login()
 		{
+			//echo "login SESSION[username]:". $_SESSION["username"];
 			// get relevant values
 			$username = $_POST["username"];
 			$sha1 = $_POST["sha1"];
-			
-			echo $sha1;
 			
 			// step 1: someone could have bypassed the javascript validation, so validate again.
 			if(!$this->validate_user_name($username)) {
@@ -270,13 +286,17 @@
 		function register(&$registration_callback=false)
 		{
 			// get relevant values
-			$username = $_POST["username"];
+			// MODIFIED BECAUSE ALL USERNAMES WILL BE EQUAL TO THE EMAIL ADDRESSES
+			//$username = $_POST["username"];
 			$email = $_POST["email"];
 			$sha1 = $_POST["sha1"];
+			$roles = $_POST["radio_role"];
+			
 			// step 1: someone could have bypassed the javascript validation, so validate again.
-			if(!$this->validate_user_name($username)) {
+			/* if(!$this->validate_user_name($username)) {
 				$this->info("registration error: user name did not pass validation");
 				return false; }
+			 */
 			if(preg_match(User::emailregexp, $email)==0) {
 				$this->info("registration error: email address did not pass validation");
 				return false; }
@@ -284,35 +304,37 @@
 				$this->info("registration error: password did not pass validation");
 				return false; }
 			// step 2: if validation passed, register user
-			$registered = $this->register_user($username, $email, $sha1, $registration_callback);
+			// email used for username field
+			$registered = $this->register_user($email, $email, $sha1, $roles, $registration_callback);
 			if($registered && User::use_mail)
 			{
 				// send email notification
-				$from = User::MAILER_NAME;
-				$replyto = User::MAILER_REPLYTO;
-				$domain_name = User::DOMAIN_NAME;
-				$subject = User::DOMAIN_NAME . " registration";
+				$from = MAILER_NAME;
+				$replyto = MAILER_REPLYTO;
+				$domain_name = DOMAIN_NAME;
+				$subject = DOMAIN_NAME . " registration";
 				$body = <<<EOT
-	Hi,
+	Welcome to $domain_name!
+			
+	This is an automated message to let you know that someone signed up at $domain_name, using this email address.
 
-	this is an automated message to let you know that someone signed up at $domain_name with the user name "$username", using this email address as mailing address.
+	If you were not the one to register this account, you can either contact us the normal way or you can ask the system to reset the password for the account, after which you can simply log in with the temporary password and delete the account!
 
-	Because of the way our user registration works, we have no idea which password was used to register this account (it gets one-way hashed by the browser before it is sent to our user registration system, so that we don't know your password either), so if you registered this account, hopefully you wrote your password down somewhere.
-
-	However, if you ever forget your password, you can click the "I forgot my password" link in the log-in section for $domain_name and you will be sent an email containing a new, ridiculously long and complicated password that you can use to log in. You can change your password after logging in, but that's up to you. No one's going to guess it, or brute force it, but if other people can read your emails, it's generally a good idea to change passwords.
-
-	If you were not the one to register this account, you can either contact us the normal way or —much easier— you can ask the system to reset the password for the account, after which you can simply log in with the temporary password and delete the account. That'll teach whoever pretended to be you not to mess with you!
-
-	Of course, if you did register it yourself, welcome to $domain_name!
-
-	- the $domain_name team
+	- $domain_name 
 EOT;
 				$headers = "From: $from\r\n";
 				$headers .= "Reply-To: $replyto\r\n";
 				$headers .= "X-Mailer: PHP/" . phpversion();
+				
+				
 				mail($email, $subject, $body, $headers);
+				
 			}
-
+			
+			// if registration was successful, the user should be logged in automatically
+			$this->authenticated = $this->login_user($email, $sha1);
+		
+			
 			return $registered;
 		}
 
@@ -342,7 +364,7 @@ EOT;
 		{
 			// get the email for which we should reset
 			$email = $_POST["email"];
-
+			
 			// step 1: someone could have bypassed the javascript validation, so validate again.
 			if(preg_match(User::emailregexp, $email)==0) {
 				$this->info("registration error: email address did not pass validation");
@@ -354,57 +376,64 @@ EOT;
 			$query = "SELECT username, token FROM users WHERE email = '$email'";
 			$username = "";
 			$token = "";
-			foreach($this->database->query($query) as $data) { $username = $data["username"]; $token = $data["token"]; break; }
+			foreach($this->database->query($query) as $data) {
+				 $username = $data["username"]; 
+				 $token = $data["token"]; break; 
+			}
 
 			// step 2a: if there was no user to reset a password for, stop.
-			if($username == "" || $token == "") return false;
+			if($username == "" || $token == "") {
+				$this->error("Could not reset password for $username");
+				return false; 
+			}
 
 			// step 2b: if there was a user to reset a password for, reset it.
+			
+			
+			
 			$dbpassword = $this->token_hash_password($username, $sha1, $token);
 			$update = "UPDATE users SET password = '$dbpassword' WHERE email= '$email'";
 			$this->database->exec($update);
 
 			// step 3: notify the user of the new password
-			$from = User::MAILER_NAME;
-			$replyto = User::MAILER_REPLYTO;
-			$domain_name = User::DOMAIN_NAME;
-			$subject = User::DOMAIN_NAME . " password reset request";
+			$from = MAILER_NAME;
+			$replyto = MAILER_REPLYTO;
+			$domain_name = DOMAIN_NAME;
+			$subject = DOMAIN_NAME . " password reset request";
 			$body = <<<EOT
 	Hi,
 
-	this is an automated message to let you know that someone requested a password reset for the $domain_name user account with user name "$username", which is linked to this email address.
+	This is an automated message to let you know that someone requested a password reset for the $domain_name user account linked to this email address.
 
-	We've reset the password to the following 64 character string, so make sure to copy/paste it without any leading or trailing spaces:
-
-	$newpassword
+	We've reset the password to the following 64 character string:
 
 	newpassword: $newpassword
-	
-	token: $token
-	sha1: $sha1
-	dbpassword: $dbpassword
 	
 	If you didn't even know this account existed, now is the time to log in and delete it. How dare people use your email address to register accounts! Of course, if you did register it yourself, but you didn't request the reset, some jerk is apparently reset-spamming. We hope he gets run over by a steam shovel driven by rabid ocelots or something.
 
 	Then again, it's far more likely that you did register this account, and you simply forgot the password so you asked for the reset yourself, in which case: here's your new password, and thank you for your patronage at $domain_name!
 
-	- the $domain_name team
+	- $domain_name 
 EOT;
 			$headers = "From: $from\r\n";
 			$headers .= "Reply-To: $replyto\r\n";
 			$headers .= "X-Mailer: PHP/" . phpversion();
 			mail($email, $subject, $body, $headers);
+				
+
 		}
 
 	// ------------------
 	// specific functions
 	// ------------------
-
+	
 		// session management: set session values
 		function setSession($username, $token)
 		{
 			$_SESSION["username"]=$username;
 			$_SESSION["token"]=$token;
+			
+			//echo "setSession SESSION[username]:". $_SESSION["username"];
 		}
 
 		// session management: reset session values
@@ -413,7 +442,7 @@ EOT;
 			$_SESSION["username"] = User::GUEST_USER;
 			$_SESSION["token"] = -1;
 		}
-
+		
 		/**
 		 * Validate a username. Empty usernames or names
 		 * that are modified by making them SQL safe are
@@ -447,13 +476,16 @@ EOT;
 		function authenticate_user($username, $operation)
 		{
 			// actually logged in?
-			if($this->is_user_active($username)===false) { return false; }
+			if($this->is_user_active($username)===false) 
+			{	return false; }
 
 			// logged in, but do the tokens match?
 			$token = $this->get_user_token($username);
-			if($token != $_SESSION["token"]) {
+			if($token != $_SESSION["token"]) 
+			{
 				$this->error("token mismatch for $username");
-				return false; }
+				return false; 
+			}
 
 			// active, using the correct token -> authenticated
 			return true;
@@ -495,12 +527,12 @@ EOT;
 		}
 
 		/**
-		 * We don't require assloads of personal information.
+		 * We don't require personal information.
 		 * A username and a password are all we want. The rest
 		 * is profile information that can be set, but in no way
 		 * needs to be, in the user's profile section
 		 */
-		function register_user($username, $email, $sha1, &$registration_callback = false)
+		function register_user($username, $email, $sha1, $roles, &$registration_callback = false)
 		{
 			$dbpassword = $this->token_hash_password($username, $sha1, "");
 			if($dbpassword==$sha1) die("password hashing is not implemented.");
@@ -508,13 +540,20 @@ EOT;
 			// Does user already exist? (see notes on safe reporting)
 			if(User::unsafe_reporting) {
 				$query = "SELECT username FROM users WHERE username LIKE '$username'";
-				foreach($this->database->query($query) as $data) {
+				foreach($this->database->query($query) as $data) 
+				{
 					$this->info("user account for $username not created.");
 					$this->error = "this user name is already being used by someone else.";
-					return false; }}
-			else{	$query = "SELECT username FROM users";
-				$usernames = array();
-				foreach($this->database->query($query) as $data) { $usernames[] = $this->homogenise_username($data["username"]); }
+					return false; 
+				}
+			}
+			else{
+					$query = "SELECT username FROM users";
+					$usernames = array();
+					foreach($this->database->query($query) as $data) 
+					{
+							 $usernames[] = $this->homogenise_username($data["username"]); 
+					}
 				if(in_array($this->homogenise_username($username), $usernames)) {
 					$this->info("user account for $username not created.");
 					$this->error = "this user name is not allowed, because it is too similar to other user names.";
@@ -529,16 +568,22 @@ EOT;
 
 			// This user can be registered
 			$insert = "INSERT INTO users (username, email, password, token, role, active, last) ";
-			$insert .= "VALUES ('$username', '$email', '$dbpassword', '', 'user', 'true', '" . time() . "') ";
+			$insert .= "VALUES ('$username', '$email', '$dbpassword', '', '$roles', 'true', '" . time() . "') ";
 			$this->database->exec($insert);
 			$query = "SELECT * FROM users WHERE username = '$username'";
 			foreach($this->database->query($query) as $data) {
 				$this->info("created user account for $username");
 				$this->update_user_token($username, $sha1);
+				
+				$dir = false;
+				if(User::use_user_dir)
+				{
 				// make the user's data directory
 				$dir = User::USER_HOME . $username;
 				if(!mkdir($dir, 0600)) { $this->error("could not make user directory $dir"); return false; }
 				$this->info("created user directory $dir");
+				}
+				
 				// if there is a callback, call it
 				if($registration_callback !== false) { $registration_callback($username, $email, $dir); }
 				return true; }
@@ -561,21 +606,22 @@ EOT;
 			$query = "SELECT password FROM users WHERE username = '$username'";
 			foreach($this->database->query($query) as $data) {
 				if($dbpassword==$data["password"]) {
+					
 					// authentication passed - 1) mark active and update token
 					$this->mark_user_active($username);
 					$this->setSession($username, $this->update_user_token($username, $sha1));
 					// authentication passed - 2) signal authenticated
 					return true; }
 				// authentication failed
-				$this->info("password mismatch for $username");
-				if(User::unsafe_reporting) { $this->error = "incorrect password for $username."; }
-				else { $this->error = "the specified username/password combination is incorrect."; }
+				$this->info("Password mismatch for $username");
+				if(User::unsafe_reporting) { $this->error = "Incorrect password for $username."; }
+				else { $this->error = "The specified username/password combination is incorrect."; }
 				return false; }
 
 			// authentication could not take place
-			$this->info("there was no user $username in the database");
+			$this->info("There was no user $username in the database");
 			if(User::unsafe_reporting) { $this->error = "user $username is unknown."; }
-			else { $this->error = "you either did not correctly input your username, or password (... or both)."; }
+			else { $this->error = "Username or Password combination is incorrect or not present in the database."; }
 			return false;
 		}
 
@@ -616,6 +662,15 @@ EOT;
 			$this->database->exec($delete);
 			$this->info("removed $username from the system");
 			$this->resetSession();
+			
+			//delete userdir if 
+			if(User::use_user_dir)
+			{
+				if(!rmdir($dir)) { $this->error("could not remove user directory $dir"); return false; }
+				$this->info("removed user directory $dir");
+			}
+			
+			
 			return true;
 		}
 
@@ -684,8 +739,11 @@ EOT;
 		 */
 		function mark_user_active($username)
 		{
+			
 			$update = "UPDATE users SET active = 'true', last = '" . time() . "' WHERE username = '$username'";
-			$this->database->exec($update);
+			$numrows = 0;
+			$numrows = $this->database->exec($update);
+			
 			$this->info("$username has been marked currently active.");
 			return true;
 		}
@@ -698,21 +756,26 @@ EOT;
 			$last = 0;
 			$active = "false";
 			$query = "SELECT last, active FROM users WHERE username = '$username'";
-			foreach($this->database->query($query) as $data) {
+			foreach($this->database->query($query) as $data) 
+			{
 				$last = intval($data["last"]);
 				$active = $data["active"];
-				break; }
+				break; 
+			}
 
-			if($active=="true") {
+			if($active=="true") 
+			{
 				$diff = time() - $last;
 				if($diff >= User::time_out) {
 					$this->logout_user($username);
 					$this->error("$username was active but timed out (timeout set at " . User::time_out . " seconds, difference was $diff seconds)");
 					return false; }
 				$this->info("$username is active");
-				return true; }
+				return true; 
+			}
 
 			$this->error("$username is not active");
+			
 			$this->resetSession();
 			return false;
 		}
@@ -738,5 +801,8 @@ EOT;
 			while($len-->0) { $string .= $this->ascii[mt_rand(0, $max)]; }
 			return $string;
 		}
+		
+		
 	}
+
 ?>

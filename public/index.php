@@ -1,16 +1,19 @@
 <?php
 
-	require_once("./include/radstep.php");
-	require_once("./include/user.php");
-	$USER = new User();
+	require_once("./include/debuggers.php");
+	require_once("./include/globals.php");
+	
+	require_once("./include/RadStep/RadStepCommon.php");
+	
+	$USER = new RadStep\RadStepUser();
 	
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
  
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
 	<head>
+		<meta charset="utf-8"/>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 		<meta name="description" content="Radiology Training Application" />
 		<meta name="keywords" content="radiology, education" />
@@ -18,29 +21,28 @@
 		<meta name="designer" content="TxJxO" />
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
-		<meta charset="utf-8"/>
-		
 		<title>RadSTEP</title>
-	
-	
-	<link rel="stylesheet" type="text/css" href="css/default.css" />
-	<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
-	
-	<!-- from rsauth package...just the styling -->
-	<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
-    
-    <!-- from user.php authentication class -->
-    <!-- <link rel="stylesheet" type="text/css" href="css/userstyle.css"></link>-->
-    <script type="text/javascript" src="lib/sha1.js"></script>
-	<script type="text/javascript" src="lib/user.js"></script>
-	
-	<!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
-	<style type="text/css">
-		.debug{ display:none; }
-	</style>
+		
+		
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+		<!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
+		
+		<!-- from rsauth package...just the styling -->
+		<link rel="stylesheet" type="text/css" href="css/rsauth.css" />
+		
+		<!-- from user.php authentication class -->
+		<!-- <link rel="stylesheet" type="text/css" href="css/userstyle.css"></link>-->
+		<script type="text/javascript" src="include/RadStep/sha1.js"></script>
+		<script type="text/javascript" src="include/RadStep/user.js"></script>
+		
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		<style type="text/css">
+			.debug{ display:none; }
+		</style>
 
 
 
@@ -60,9 +62,13 @@
 			alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
 	});
 	*/
+	
+	
+	
 	$("#txtbox_username").keyup(function(event){
     if(event.keyCode == 13)
     {
+    	
         $("#btn_login").click();
     }});
 	$("#txtbox_password").keyup(function(event){
@@ -84,10 +90,11 @@
 
 	<div id="div_mainpage">
 	
-	<div id="div_header" style="text-align:center;margin:0 auto;">
-		<h1 style="text-align:center;letter-spacing: 1.1em;">RadSTEP</h1>
-		<h3 style="letter-spacing: 1em; font-variant: small-caps;">alpha build</h3>
-	</div><!--div_header-->
+	<?php
+	
+		insertDivHeader();
+	
+	?>
 	
 	<div id="div_main" style="margin:0 auto;">
 
@@ -101,7 +108,7 @@
 				
 			<div id="div_rsauthform">
 			<!-- Allow a user to log in -->
-			<form class="controlbox" name="log in" id="login" action="index.php" method="POST">
+			<form class="controlbox" name="login" id="login" action="index.php" method="POST">
 				
 				<fieldset>
 				<legend>Login</legend>
@@ -116,7 +123,7 @@
 				
 				<div class="container">
 				<label for="password1" >Password*:</label><br/>
-		    	<input id="txtbox_password" type="password" name="password1" value=""  maxlength="50" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />
+		    	<input id="txtbox_password" type="password" name="password1" value="" style="border:solid 1px #888; height:32px;font:18px sans-serif;" />
 				</div>
 				
 				<div class="container">
@@ -148,7 +155,7 @@
 			
 			// $USER->authenticated == true 
 			// then redirect to usermain.php
-			redirect("./usermain.php");
+			redirect("usermain.php");
 		}?>
 		
 		</div><!--CLOSE div_login-->
