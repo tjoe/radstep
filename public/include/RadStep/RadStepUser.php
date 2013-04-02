@@ -53,7 +53,7 @@
 		public function getAssignmentsAssignedToMe()
 		{
 
-			$query = "SELECT assignment_id FROM assignments WHERE assigned_by = '".$this->username."';";
+			$query = "SELECT assignment_id FROM assignments WHERE assigned_to = '".$this->username."';";
 			$results = $this->database->query($query);
 			$assignments = array();
 			foreach($results as $row){

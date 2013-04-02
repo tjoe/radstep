@@ -19,7 +19,7 @@
 	 * 		when the QuestionSets can be created and exported programmatically
 	 */ 	
 	
-	const UPLOAD_DIR = "modules/";
+	
 	
 	$USER = new RadStep\User();
 	
@@ -40,7 +40,7 @@
 	  else
 	    {
 	    	
-			$host_dir = UPLOAD_DIR . $filename_explode[0] . "/";
+			$host_dir = RadStep\UPLOAD_DIR . $filename_explode[0] . "/";
 			$host_path = $host_dir . $_FILES["file"]["name"];
 			
 		    echo "Upload: " . $_FILES["file"]["name"] . "<br>";
@@ -79,36 +79,37 @@
 				 * 		
 				 */
 				//FIND XML FILE, must be same name as outside folder
-				$xml = new SimpleXMLElement($host_dir.$filename_explode[0].".xml");
+				$xml = simplexml_load_file($host_dir.$filename_explode[0].".xml");
 				
 				//Get QuestionSet node
-				$node_questionSet = $xml->xpath("/QuestionSet");
+				$node_questionSet = $xml;//$xml->xpath("/QuestionSet");
 				$obj_questionSet = new RadStep\QuestionSet();
 				
-				$obj_questionSet->name = (string)$obj_questionSet["name"];
-				$obj_questionSet->created_by = $this->USER->username;
+				$obj_questionSet->name = (string)$node_questionSet["name"];
+				$obj_questionSet->created_by = $USER->username;
 				$obj_questionSet->created_datetime = date(DateTime::ISO8601); //formats date/time according to ISO8601
-				$obj_questionSet->keywords = (string)$obj_questionSet["keywords"];
-				$obj_questionSet->difficulty = (string)$obj_questionSet["difficulty"];
+				$obj_questionSet->keywords = (string)$node_questionSet["keywords"];
+				$obj_questionSet->difficulty = (string)$node_questionSet["difficulty"];
 				
 				$node_questions = $xml->xpath("/QuestionSet/Question");
 				foreach($node_questions as $index => $question)
 				{
 					//create Question object
 					$obj_question = new RadStep\Question();
-					$obj_question->created_by = $this->USER->username;
+					$obj_question->created_by = $USER->username;
 					$obj_question->created_datetime = date(DateTime::ISO8601);
-					$obj_question->prompt = (string)$obj_question["prompt"];
+					$obj_question->prompt = (string)$question->Prompt;
 					$obj_question->images = array();
-					$node_images = $xml->xpath("/QuestionSet/Question[".$index."]/Image");
+					$node_images = $question->xpath("Image");
 					//$obj_question->image_captions = array();
 					foreach($node_images as $image){
-						$obj_question->images[] = array( 	"url" => (string)$image["url"], 
+						//append path to module to the relative url given in the xml file
+						$obj_question->images[] = array( 	"url" => $host_dir.(string)$image["url"], 
 															"caption" => (string)$image["caption"] );
 					}
 					
 					$obj_question->multiple_choices = array();
-					$node_choices = $xml->xpath("/QuestionSet/Question[".$index."]/Choice");
+					$node_choices = $question->xpath("Choice");
 					foreach($node_choices as $choiceindex => $choice){
 						$obj_question->multiple_choices[] = array( 
 															"choice" => $choiceindex, 
@@ -117,8 +118,9 @@
 															"correct" => (bool)$choice["correct"] );
 					}
 					
-					$obj_question->$keywords = (string)$obj_question["keywords"];
-					$obj_question->difficulty = (string)$obj_question["difficulty"];
+					$obj_question->explanation = (string)$question->Explanation;
+					$obj_question->keywords = (string)$question["keywords"];
+					$obj_question->difficulty = (string)$question["difficulty"];
 					
 					//add object to db (autogenerates and updates question_id, updates json according to vars)
 					$obj_question->addInstanceToDb();

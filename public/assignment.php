@@ -26,10 +26,16 @@
 		if($USER->username == $assignment->assigned_by || $USER->username == $assignment->assigned_to)
 		{
 		
-		$question_list = $assignment->questions;
+			if($assignment->status == RadStep\Assignment::ASSIGNED_NOT_STARTED)
+			{
+				$assignment->started_datetime = date(DateTime::ISO8601);
+				$assignment->updateInstanceToDb();
+			}
+			
+			$question_list = $assignment->questions;
 	
-		//load current question_index
-		$current_question = 1;
+			//load current question_index
+			$current_question = 1;
 		
 		
 		}else{
@@ -65,8 +71,8 @@
 		
 			#div_question{
 				float:left;
-				width:*;
-				margin-left: 135px;
+				width:65em;
+				margin-left: 110px;
     			margin-top: 5px;
 			}
 			#div_question_list{
@@ -90,6 +96,9 @@
 			}
 			#ul_question_list li:hover {
 				background-color:#B4BEC3;
+			}
+			#ul_question_list li.active {
+				background-color:#6D8D7F;
 			}
 			
 			.debug{ display:none; }
@@ -117,7 +126,15 @@
 	$("#ul_question_list li").click(function(){
 		// var question_index = $(this).index();
 		var q_id = $(this).attr("id").replace("q_",""); //removes the prefix added to each question id
-		$("#div_question").load("question.php", {"question_id": q_id }); 
+		$("#div_question").load("question.php", {"question_id": q_id , "assignment_id": '<?php echo $assignment->assignment_id ?>' }); 
+    	
+    	//remove active class from all of them
+    	$("#ul_question_list li").removeClass("active");
+    	//add active class to the one thats actually active
+    	$(this).addClass("active");
+    	
+    	//save responses to currently loaded question form
+    	
     	
 	});
 	 
@@ -161,9 +178,7 @@
 		<div id="div_question">
 		</div>
 		
-		
-		<!-- on_submit UPDATE answers SET result=form_result ajax, load next q -->
-
+	
 		
 	</div><!--CLOSE div_main-->
 

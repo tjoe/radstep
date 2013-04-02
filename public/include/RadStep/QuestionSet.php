@@ -10,6 +10,8 @@
 
 namespace RadStep;
 
+use \PDO;
+
 class QuestionSet
 {
 	//Class Variables
@@ -30,10 +32,11 @@ class QuestionSet
 	 * if questionset_id is provided, that questionset will be retrieved and 
 	 * variables set from the embedded json object
 	 * TODO: overload or (pseudo)overload constructor to accept various signatures
-	 * @param int $questionset_id creates questionset by questionset_id
+	 * @param int $questionset_id creates questionset by questionset_id, default value is false so that
+	 * a warning is not thrown if no question_id is provided as in new QuestionSet()
 	 * 
 	 */
-	public function __construct($questionset_id)
+	public function __construct($questionset_id = false)
 	{
 		// file location for the user database
 		$dbfile = DATABASE_LOCATION  . DATABASE_NAME . ".db";
@@ -49,9 +52,9 @@ class QuestionSet
 		// but we'll still need to define the user table before we can use the database.
 		if($rebuild) { $this->rebuildDatabase($dbfile); }
 	
-		if(isset($questionset_id)){
+		if($questionset_id){
 			$this->questionset_id = $questionset_id;
-			$sql = "SELECT * FROM question_sets WHERE questionset_id = ".$questionset_id.";";
+			$sql = "SELECT json FROM questionsets WHERE questionset_id = ".$questionset_id.";";
 			
 			foreach($this->database->query($sql) as $data){
 				$this->json = $data["json"];	
@@ -90,7 +93,7 @@ class QuestionSet
 		$json_obj = json_decode($json);
 		if(!is_null($json_obj)){ 
 			$this->questionset_id = $json_obj->questionset_id;
-			$this->name = $json_obj->questionset_name;
+			$this->name = $json_obj->name;
 			$this->questions = $json_obj->questions;
 			$this->created_by = $json_obj->created_by;
 			$this->created_datetime = $json_obj->created_datetime;
@@ -114,13 +117,13 @@ class QuestionSet
 	 {
 	 	$to_serialize = array();
 		
-		$to_serialize[] = $this->questionset_id;
-		$to_serialize[] = $this->name = "";
-		$to_serialize[] = $this->questions;
-		$to_serialize[] = $this->created_by;
-		$to_serialize[] = $this->created_datetime;
-		$to_serialize[] = $this->keywords;
-		$to_serialize[] = $this->difficulty;	
+		$to_serialize["questionset_id"] = $this->questionset_id;
+		$to_serialize["name"] = $this->name;
+		$to_serialize["questions"] = $this->questions;
+		$to_serialize["created_by"] = $this->created_by;
+		$to_serialize["created_datetime"] = $this->created_datetime;
+		$to_serialize["keywords"] = $this->keywords;
+		$to_serialize["difficulty"] = $this->difficulty;	
 		
 		$this->json = json_encode($to_serialize);
 		
@@ -163,21 +166,15 @@ class QuestionSet
 	  function addInstanceToDb()
 	  {
 	  	if(empty($this->questionset_id) ){
-	  			
-	  		$tmp_id = uniqid();
-			
-			$sql_insert = "INSERT INTO questionsets (json) VALUES (".$tmp_id.");";
-			$this->database->exec($insert);
-			
-			$sql_get_real_id = "SELECT questionset_id FROM questionsets WHERE json = ".$tmp_id.";";
-			foreach($this->database->query($query) as $data) {
-				$read_id = $data["questionset_id"];
-			}
-			
-			$this->questionset_id = $read_id;
+	  		
+			//create empty record to get the auto id
+			$sql_insert = "INSERT INTO questionsets (json) VALUES (null);";
+			$this->database->exec($sql_insert);
+			$this->questionset_id = $this->database->lastInsertId();
 			$this->setJsonFromInstance();
-			$sql_update = "UPDATE questionset SET json = ".$this->json." WHERE questionset_id = ".$real_id.";";
-			$this->database->exec($update);
+			$this->updateInstanceToDb();		
+			
+			//echo($sql_insert . " executed with ". $r . " records added.".PHP_EOL);
 			
 			
 			return true;
@@ -187,7 +184,29 @@ class QuestionSet
 
 	  }
 	  
-	
+	  
+	  /**
+	  * Updates the database row corresponding to this instance
+	  * 	pre: assignment_id for this instance should not be empty
+	  * 	record is then updated 
+	  * @return true for success, false for fail
+	  */
+	  function updateInstanceToDb()
+	  {
+	  	if(!empty($this->questionset_id)){
+	  		
+			$this->setJsonFromInstance();
+			
+			$sql_update = "UPDATE questionsets SET created_by = '". $this->created_by . "', json = ".$this->database->quote($this->json)." WHERE questionset_id = ".$this->questionset_id.";";
+			
+			$this->database->exec($sql_update);
+			
+			return true;
+	  	}
+		
+		return false;
+
+	  }
 
 }
 

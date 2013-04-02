@@ -1,153 +1,194 @@
+<?xml version='1.0' standalone='yes' ?>
+
 <QuestionSet name="SampleModule" keywords="sample,breast,mammography,women's imaging" difficulty="medium" >
 
 	
 	<Question keywords="" difficulty="">
 		<Prompt>What are the American College of Radiology guidelines for screening mammography?</Prompt>
  
-		<Choice>Annually beginning at age 50 and continuing as long as the women is in good health</Choice>
-		<Choice>Annually beginning at age 40 and continuing as long as the women is in good health</Choice>
-		<Choice>Annually beginning at age 40 and continuing until 80 years of age</Choice>
-		<Choice>Annually beginning at age 50 and continuing until 80 years of age</Choice>
+		<Choice><Text>Annually beginning at age 50 and continuing as long as the women is in good health</Text></Choice>
+		<Choice correct="true"><Text>Annually beginning at age 40 and continuing as long as the women is in good health</Text></Choice>
+		<Choice><Text>Annually beginning at age 40 and continuing until 80 years of age</Text></Choice>
+		<Choice><Text>Annually beginning at age 50 and continuing until 80 years of age</Text></Choice>
+		<Explanation>Periodic mammography screening of age-appropriate asymptomatic women is currently the only imaging modality that has been shown to reduce breast cancer mortality. Screening mammography is indicated for asymptomatic women 40 years of age or older. It is unclear at what age, if any, women cease to benefit from screening mammography. Because this age is likely to vary depending on the
+individual’s overall health, the decision as to when to stop routine mammography screening should be made on an individual basis by each woman and her physician.</Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>In an average-risk population what is the approximate cancer detection rate during prevalence (first-round) mammographic screening?</Prompt>
  
-		<Choice>Approximately 6-10 cancers per 1000 patients</Choice>
-		<Choice>Approximately 2-4 cancers per 1000 patients</Choice>
-		<Choice>Approximately 14-16 cancers per 1000 patients</Choice>
-		<Choice>Approximately 1-2 cancers per 1000 patients</Choice>
+		<Choice correct="true"><Text>Approximately 6-10 cancers per 1000 patients</Text></Choice>
+		<Choice><Text>Approximately 2-4 cancers per 1000 patients</Text></Choice>
+		<Choice><Text>Approximately 14-16 cancers per 1000 patients</Text></Choice>
+		<Choice><Text>Approximately 1-2 cancers per 1000 patients</Text></Choice>
+		<Explanation>A frequently used quality standard for mammographic screening is the detection rate, either at prevalence (first) screen or incidence (second or subsequent) screen. In the first year of screening (prevalence) 6 to 10 cancers per 1,000 women screened should be detected. In subsequent screens (incidence) of the same women 2 to 3 cancers can be expected per 1,000 women. Twenty percent to 30% of cancers should be DCIS. The rate of node positivity will be higher in the prevalence year but should drop below 20% in subsequent years.  A successful screening program should try to detect 40% to 50% invasive cancers when they are 1 cm or smaller in diameter.</Explanation>
 	</Question>
 
 	<Question keywords="" difficulty="">
 		<Prompt>According to MQSA guidelines which quality control test should be performed on a weekly basis?</Prompt>
  
-		<Choice>Phantom image quality</Choice>
-		<Choice>Screen-film contact</Choice>
-		<Choice>Compression device performance</Choice>
-		<Choice>Radiation dose</Choice>
+		<Choice correct="true"><Text>Phantom image quality</Text></Choice>
+		<Choice><Text>Screen-film contact</Text></Choice>
+		<Choice><Text>Compression device performance</Text></Choice>
+		<Choice><Text>Radiation dose</Text></Choice>
+		<Explanation>Facilities with screen-film systems should perform an image quality evaluation test, using a FDA-approved phantom, at least weekly. Screen-film contact testing should be conducted semiannually using 40 mesh copper screen. All cassettes used in the facility for mammography should be tested. Compression device performance should be performed semiannually. The maximum compression force for the initial power drive should be between 111 newtons (25 pounds) and 200 newtons (45 pounds). Each facility must undergo “at least once each year” a survey performed by a medical physicist.</Explanation>
 	</Question>
 	  
 	<Question keywords="" difficulty="">
 		<Prompt>What are physician qualifications outlined in the American College of Radiology practice guidelines for ultrasound-guided breast interventional procedures?</Prompt>
  
-		<Choice>Minimum of 8 hours of Category 1 CME didactic instruction in ultrasound-guided biopsy techniques and performance of at least 12 biopsy procedures under the supervision of a qualified physician</Choice>
-		<Choice>The physician should perform at least 12 ultrasound-guided breast biopsies every 2 years</Choice>
-		<Choice>The physician should obtain at least 6 hours of Category 1 CME in ultrasound-guided breast biopsy every 3 years</Choice>
-		<Choice>Should meet the initial qualifications specified in the ACR Practice Guideline for the Performance of Screening and Diagnostic Mammography</Choice>
+		<Choice correct="true"><Text>Minimum of 8 hours of Category 1 CME didactic instruction in ultrasound-guided biopsy techniques and performance of at least 12 biopsy procedures under the supervision of a qualified physician</Text></Choice>
+		<Choice><Text>The physician should perform at least 12 ultrasound-guided breast biopsies every 2 years</Text></Choice>
+		<Choice><Text>The physician should obtain at least 6 hours of Category 1 CME in ultrasound-guided breast biopsy every 3 years</Text></Choice>
+		<Choice><Text>Should meet the initial qualifications specified in the ACR Practice Guideline for the Performance of Screening and Diagnostic Mammography</Text></Choice>
+		<Explanation>Initial qualifications:
+Mammography: Have interpreted or multi-read at least 240 mammographic examinations within the 6-month period immediately prior to the date that the physician qualifies as an interpreting physician under the direct supervision of an interpreting physician. 
+Ultrasound-guided breast interventions: a minimum of 8 hours of Category 1 CME didactic instruction in ultrasound-guided biopsy techniques and performance of at least 12 ultrasound-guided breast biopsy procedures under the supervision of a qualified physician. Completion of a residency or fellowship program that includes instruction in stereotactic breast biopsy procedures is also acceptable.
+Stereotactic –guided breast interventions:  The physician must also have 3 hours of Category 1 CME didactic instruction in stereotactically-guided breast intervention and have performed at least 3 hands-on stereotactic breast biopsy procedures under the supervision of a qualified radiologist. Completion of a residency or fellowship program that includes instruction in stereotactic breast biopsy procedures is also acceptable.
+Maintenance of competence:
+Mammography: Interpretation of 960 mammographic examinations over a 24-month period.
+Breast ultrasound: a minimum of 100 examinations per year is recommended.
+Ultrasound-guided breast intervention: The physician should perform at least 24 ultrasound-guided
+breast biopsies every 2 years.
+Stereotactic –guided breast interventions: at least 24 stereotactic-guided breast biopsies every 2 years.
+Continuing education requirements:
+Mammography:  15 hrs of Category 1 CME in a 36-month period. 
+Ultrasound-guided breast intervention:  3 hrs of Category 1 CME in a 36-month period. 
+Stereotactic –guided breast interventions: 3 hrs of Category 1 CME in a 36-month period. 
+</Explanation>
 	</Question>
 	
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Which of the following statements regarding mammographic positioning is TRUE?</Prompt>
  
-		<Choice>The standard MLO view may miss cancers in the medial aspect of the breast</Choice>
-		<Choice>Motion blur occurs most often in the superior breast on MLO views</Choice>
-		<Choice>The difference between the posterior nipple line measurement on the mediolateral oblique and craniocaudal views should ideally exceed 1 cm</Choice>
-		<Choice>CC view should be positioned to include as much lateral tissue as possible without rotating the nipple from the midline</Choice>
+		<Choice correct="true"><Text>The standard MLO view may miss cancers in the medial aspect of the breast</Text></Choice>
+		<Choice><Text>Motion blur occurs most often in the superior breast on MLO views</Text></Choice>
+		<Choice><Text>The difference between the posterior nipple line measurement on the mediolateral oblique and craniocaudal views should ideally exceed 1 cm</Text></Choice>
+		<Choice><Text>CC view should be positioned to include as much lateral tissue as possible without rotating the nipple from the midline</Text></Choice>
+		<Explanation>The single most useful mammographic projection of the breast is the MLO image. A properly positioned MLO study shows tissue extending from the axillary tail to the upper abdominal wall. If the breast is not well positioned cancers in the medial aspect of the breast can be missed.  The area of the breast most vulnerable to motion on the MLO view is posterior/inferior and the anterior/central aspect. The difference between the posterior nipple line measurement on the MLO and CC views should be less than or equal to 1 cm. Standard CC imaging tries to include all of the medial tissues.</Explanation>
 	</Question>    
  
 	
 	<Question keywords="" difficulty="">
 		<Prompt>In mammography, adequate breast compression results in all of the following EXCEPT</Prompt>
  
-		<Choice>Reduced scatter radiation</Choice>
-		<Choice>Reduced radiation dose</Choice>
-		<Choice>Reduced exposure dynamic range</Choice>
-		<Choice>Elimination of grid</Choice>
+		<Choice><Text>Reduced scatter radiation</Text></Choice>
+		<Choice><Text>Reduced radiation dose</Text></Choice>
+		<Choice><Text>Reduced exposure dynamic range</Text></Choice>
+		<Choice correct="true"><Text>Elimination of grid</Text></Choice>
+		<Explanation>Optimal mammography requires the use of breast compression. Compression reduces the thickness of the breast, and as a result reduces breast radiation dose.  Lower x-ray tube voltage can be used with compression which will increase contrast. Compression reduces exposure time thus minimizing patient motion blur.  Compression reduces scatter radiation, minimizes image magnification, and reduces focal spot blur.  Contact mammography is performed using a moving grid (grid ratio 5:1). Grids are not used for magnification mammography as the presence of air gap reduces the amount of scatter radiation reaching the film.</Explanation>
 	</Question>
 
 	<Question keywords="" difficulty="">
 		<Prompt>Which of the following statements regarding digital mammography is FALSE?</Prompt>
  
-		<Choice>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Choice>
-		<Choice>Digital technology detects significantly more cancers than film screen in women with dense breasts</Choice>
-		<Choice>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Choice>
-		<Choice>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+		<Choice><Text>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Text></Choice>
+		<Choice><Text>Digital technology detects significantly more cancers than film screen in women with dense breasts</Text></Choice>
+		<Choice correct="true"><Text>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Text></Choice>
+		<Choice><Text>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Text></Choice>
+		<Explanation>The Digital Mammographic Imaging Screening Trial compared film and digital mammography and found digital mammography was better at detecting breast cancer in: Women who are premenopausal or peri-menopausal, women who are under age 50 and women who have dense breast tissue.  There is no improvement in cancer detection rate for digital mammography over film screen mammography  for women who does not fall in to the above categories. Contrast resolution of digital systems is better than analog systems. Digital systems have a lower spatial resolution (5-13 lp/mm) compared to analog systems (15-20 lp/mm).</Explanation>
 	</Question>
      
  	<Question keywords="" difficulty="">
 		<Prompt>Which of the following statements regarding digital mammography is FALSE?</Prompt>
  
-		<Choice>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Choice>
-		<Choice>Digital technology detects significantly more cancers than film screen in women with dense breasts</Choice>
-		<Choice>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Choice>
-		<Choice>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Choice>
+		<Choice><Text>According to the results of Digital Mammography Imaging Screening Trial (DMIST) there is no improvement in cancer detection rate for digital mammography over film screen mammography for the general population</Text></Choice>
+		<Choice><Text>Digital technology detects significantly more cancers than film screen in women with dense breasts</Text></Choice>
+		<Choice><Text>The spatial resolution of digital systems is significantly better than that of analog film screen systems</Text></Choice>
+		<Choice><Text>The contrast resolution of digital systems is significantly better than that of analog film screen systems</Text></Choice>
+		<Explanation></Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>The American Cancer Society recommends annual breast MRI screening for patients with</Prompt>
  
-		<Choice>A personal history of breast cancer, including ductal carcinoma insitu (DCIS)</Choice>
-		<Choice>Lobular carcinoma insitu (LCIS) or atypical lobular hyperplasia (ALH)</Choice>
-		<Choice>First-degree relative of BRCA carrier, but untested</Choice>
-		<Choice>Lifetime risk 15–20%, as defined by BRCAPRO or other models</Choice>
+		<Choice><Text>A personal history of breast cancer, including ductal carcinoma insitu (DCIS)</Text></Choice>
+		<Choice><Text>Lobular carcinoma insitu (LCIS) or atypical lobular hyperplasia (ALH)</Text></Choice>
+		<Choice correct="true"><Text>First-degree relative of BRCA carrier, but untested</Text></Choice>
+		<Choice><Text>Lifetime risk 15–20%, as defined by BRCAPRO or other models</Text></Choice>
+		<Explanation>Recommend annual breast MRI Screening (based on evidence)
+BRCA mutation
+First-degree relative of BRCA carrier, but untested
+Life time risk of 20-25% or greater, as defined by BRCAPRO or other models
+Recommend annual breast MRI Screening (based on expert consensus opinion)
+Radiation to chest between age 10 and 30 years
+Li-Fraumeni syndrome and first-degree relatives
+Cowden and Bannayan-Riley-Ruvalcaba syndromes and first-degree relatives
+</Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Concerning breast density, which of the following statements is FALSE?</Prompt>
  
-		<Choice>The most common cause for bilaterally symmetric increasing density is exogenous hormone therapy</Choice>
-		<Choice>The American Cancer Society recommends annual breast MRI screening for women with dense breasts and strong family history of breast cancer</Choice>
-		<Choice>Women with dense breasts are at increased risk of developing breast cancer compared to those with fatty breasts</Choice>
-		<Choice>Breast density can change with weight gain or loss</Choice>
+		<Choice><Text>The most common cause for bilaterally symmetric increasing density is exogenous hormone therapy</Text></Choice>
+		<Choice correct="true"><Text>The American Cancer Society recommends annual breast MRI screening for women with dense breasts and strong family history of breast cancer</Text></Choice>
+		<Choice><Text>Women with dense breasts are at increased risk of developing breast cancer compared to those with fatty breasts</Text></Choice>
+		<Choice><Text>Breast density can change with weight gain or loss</Text></Choice>
+		<Explanation>High mammographic density is a strong risk factor for breast cancer development. High density has been found associated with higher risks of both estrogen- and progesterone-receptor positive (ER+/ PR+) and negative (ER-/PR-) breast cancers. Increase in mammographic density has been observed in women on combined therapy with estrogen and progesterone (HRT).  Loss of body fat is accompanied by loss of fat in the breasts, and the density of parenchyma increases on mammography.  Danazol used in the treatment of fibrocystic changes causes reduction in breast density.</Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Which of the following is the most significant prognostic factor for poor overall survival in patients with breast cancer?</Prompt>
  
-		<Choice>Lymphatic/vascular invasion</Choice>
-		<Choice>Her 2 Neu gene amplification and/or overexpression</Choice>
-		<Choice>Axillary lymph node status</Choice>
-		<Choice>Histologic grade</Choice>
+		<Choice><Text>Lymphatic/vascular invasion</Text></Choice>
+		<Choice><Text>Her 2 Neu gene amplification and/or overexpression</Text></Choice>
+		<Choice correct="true"><Text>Axillary lymph node status</Text></Choice>
+		<Choice><Text>Histologic grade</Text></Choice>
+		<Explanation>The most significant prognostic indicator for patients with early-stage breast cancer is the presence or absence of axillary lymph node involvement. Furthermore, there is a direct relationship between the number of involved axillary nodes and the risk for distant recurrence. For node-negative patients, tumor size is the most powerful prognostic factor and is routinely used to make adjuvant treatment decisions. Tumor grade does have prognostic significance and is primarily used to make decisions for lymph node-negative patients with borderline tumor sizes. HER2/neu overexpression is a prognostic factor that is associated with a more aggressive tumor.</Explanation>
 	</Question>
 	
 	 	<Question keywords="" difficulty="">
 		<Prompt>Craniocaudal and Mediolateral oblique mammograms of a 45-year-old female with a right breast mass. Based on the imaging appearance which of the following malignant neoplasm is MOST LIKELY?</Prompt>
- 		<Image url="images\5137e8d08ac98.jpg" caption="" />
-		<Image url="images\5137e8ed3bcc8.jpg" caption="" />
-		<Choice>Tubular carcinoma</Choice>
-		<Choice>Papillary carcinoma</Choice>
-		<Choice>Triple negative invasive ductal carcinoma</Choice>
-		<Choice>Medullary carcinoma</Choice>
+ 		<Image url="images/5137e8d08ac98.jpg" caption="" />
+		<Image url="images/5137e8ed3bcc8.jpg" caption="" />
+		<Choice><Text>Tubular carcinoma</Text></Choice>
+		<Choice><Text>Papillary carcinoma</Text></Choice>
+		<Choice><Text>Triple negative invasive ductal carcinoma</Text></Choice>
+		<Choice><Text>Medullary carcinoma</Text></Choice>
+		<Explanation></Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Gray scale ultrasound and color Doppler ultrasound images of a 50-year-old male with a right retroareolar mass. Based on the imaging appearance which of the following neoplasm is MOST LIKELY?</Prompt>
- 		<Image url="images\5137e92fcc186.jpg" caption="" />
-		<Image url="images\5137e92e5cc85.jpg" caption="" />
-		<Choice>Invasive ductal carcinoma</Choice>
-		<Choice>Papillary neoplasm</Choice>
-		<Choice>Spindle cell neoplasm</Choice>
-		<Choice>Metastasis</Choice>
+ 		<Image url="images/5137e92fcc186.jpg" caption="" />
+		<Image url="images/5137e92e5cc85.jpg" caption="" />
+		<Choice><Text>Invasive ductal carcinoma</Text></Choice>
+		<Choice><Text>Papillary neoplasm</Text></Choice>
+		<Choice><Text>Spindle cell neoplasm</Text></Choice>
+		<Choice><Text>Metastasis</Text></Choice>
+		<Explanation></Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Concerning BI-RADS category 3 assessment, which of the following statements is FALSE?</Prompt>
  
-		<Choice>Use of probably benign assessment for a palpable lesion is not supported by scientific data</Choice>
-		<Choice>A finding placed in this category should have &lt;2%   risk of malignancy</Choice>
-		<Choice>When probably benign findings increase in size or extent during followup biopsy is indicated</Choice>
-		<Choice>About 5% of screening mammograms are assigned this category without additional imaging evaluation</Choice>
+		<Choice><Text>Use of probably benign assessment for a palpable lesion is not supported by scientific data</Text></Choice>
+		<Choice><Text>A finding placed in this category should have &lt;2%   risk of malignancy</Text></Choice>
+		<Choice><Text>When probably benign findings increase in size or extent during followup biopsy is indicated</Text></Choice>
+		<Choice correct="true"><Text>About 5% of screening mammograms are assigned this category without additional imaging evaluation</Text></Choice>
+		<Explanation>When a nonpalpable mass with benign morphology is detected at screening mammography, the standard practice is to follow the lesion in six months (BI-RADS category 3).  This category is assigned after a full diagnostic imaging evaluation.  Masses in this category have a 2% or lower probability of being cancer. Given that the average estimated doubling time of breast cancers is 100–180 days, short-interval follow-up would still lead to early detection of potential cancers without compromising patient survival. If the mass with benign morphology is palpable, the recommended management is usually to obtain a tissue diagnosis. In the literature, the percentage of probably benign mammographic diagnosis is reported to be 3%–10% after a full diagnostic imaging evaluation. </Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Pertaining to male breast diseases, which of the following statements is TRUE?</Prompt>
  
-		<Choice>Lipoma is the most common benign condition of the male breast</Choice>
-		<Choice>Cystic lesions are usually benign and often require no further workup</Choice>
-		<Choice>Eccentric location of a mass in relation to the nipple is highly suggestive of gynecomastia</Choice>
-		<Choice>Clinically suspicious lesions referred for imaging should be first evaluated with mammography</Choice>
+		<Choice><Text>Lipoma is the most common benign condition of the male breast</Text></Choice>
+		<Choice><Text>Cystic lesions are usually benign and often require no further workup</Text></Choice>
+		<Choice><Text>Eccentric location of a mass in relation to the nipple is highly suggestive of gynecomastia</Text></Choice>
+		<Choice correct="true"><Text>Clinically suspicious lesions referred for imaging should be first evaluated with mammography</Text></Choice>
+		<Explanation>The majority of male breast lesions are benign. Gynecomastia is the most common benign condition of the male breast. Lipoma is the second most common benign lesion in the male breast. Mammography is an accurate method for distinguishing between benign gynecomastia and breast carcinoma and is therefore the imaging modality of choice. The relationship of the mass to the nipple should be carefully assessed. Eccentric location is highly suspicious for cancer. For those patients with suspicious findings at mammography, ultrasound is often useful for further characterization. In men, cystic lesions are frequently malignant.  Therefore, all cysts and complex masses should be worked up as potentially malignant lesions.</Explanation>
 	</Question>
 	
 	<Question keywords="" difficulty="">
 		<Prompt>Craniocaudal and Mediolateral oblique mammograms of a 35-year-old lactating female with a right breast mass. Based on the imaging appearance which of the following is the most probable diagnosis?</Prompt>
- 		<Image url="images\5137e9728921d.jpg" caption="" />
-		<Image url="images\5137e9734ead6.jpg" caption="" />
-		<Choice>Pregnancy-associated breast cancer</Choice>
-		<Choice>Granulomatous mastitis</Choice>
-		<Choice>Plasma cell mastitis</Choice>
-		<Choice>Juvenile papillomatosis</Choice>
+ 		<Image url="images/5137e9728921d.jpg" caption="" />
+		<Image url="images/5137e9734ead6.jpg" caption="" />
+		<Choice><Text>Pregnancy-associated breast cancer</Text></Choice>
+		<Choice><Text>Granulomatous mastitis</Text></Choice>
+		<Choice><Text>Plasma cell mastitis</Text></Choice>
+		<Choice><Text>Juvenile papillomatosis</Text></Choice>
+		<Explanation></Explanation>
 	</Question>
 
 </QuestionSet>

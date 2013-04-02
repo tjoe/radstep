@@ -70,6 +70,11 @@
 	<link href="css/smoothness/jquery-ui-1.10.1.min.css" rel="stylesheet" type="text/css" />
 	<script src="lib/jquery-ui-1.10.1.custom.min.js"></script>
 	
+	<script type="text/javascript" src="lib/jquery.form.js"></script>
+
+	<script type="text/javascript" src="lib/timepicker/jquery.timepicker.min.js"></script>
+  	<link rel="stylesheet" type="text/css" href="lib/timepicker/jquery.timepicker.css" />
+	
 	<!-- USE jquery +  jqueryui CDNs
 		
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -142,7 +147,48 @@
 	$( "#accordion_faculty" ).accordion({heightStyle: "content"});
 	$( "#accordion_resident" ).accordion({heightStyle: "content"});
 	
+	//SETUP ajax file upload for import question set
+	var bar = $('.bar');
+	var percent = $('.percent');
+	$("#form_import_questionset").ajaxForm({
+	    beforeSend: function() {
+	        $('#import_questionset_status').empty();
+	        var percentVal = '0%';
+	        bar.width(percentVal)
+	        percent.html(percentVal);
+	    },
+	    uploadProgress: function(event, position, total, percentComplete) {
+	        var percentVal = percentComplete + '%';
+	        bar.width(percentVal)
+	        percent.html(percentVal);
+	    },
+	    success: function() {
+	        var percentVal = '100%';
+	        bar.width(percentVal)
+	        percent.html(percentVal);
+	    },
+		complete: function(xhr) {
+			$('#import_questionset_status').html(xhr.responseText);
+		}
+	}); 
+    	
+    	
+    // SETUP create assignment form
+	$("#form_create_assignment").ajaxForm({
+	    target: "#create_assignment_status", //where to send the result
+	}); 
+	
 	}); //close jquery(document).ready
+	
+	$(function(){
+		$("#datepicker_duedate").datepicker({dateFormat:"D M dd yy"}); // 
+		var today = new Date();
+		today.setDate(today.getDate()+1); //sets default date to tomorrow
+		$("#datepicker_duedate").val(today.toDateString());
+		
+		$("#timepicker_duedate").timepicker();
+		$("#timepicker_duedate").timepicker( 'setTime', new Date()); //sets default time to now
+	});
 	
 	</script>
 	
@@ -247,7 +293,36 @@
 
 				</div>
 				<h3>Create Assignment</h3>
-				<div>Quick assignment by allowing selection of resident, due date and module to assign and link to advanced assignment editor.</div>
+				<div id="div_create_assignment">
+					<!--TODO: Make this an AJAX style
+						many solutions, see http://stackoverflow.com/questions/2320069/jquery-ajax-file-upload -->
+					<form id="form_create_assignment" action="createassignment.php" method="post" >
+						Assign To: 
+							<select id="select_assigned_to" name="assigned_to">
+							<?php foreach(RadStep\getAllResidents() as $resident){ ?>		
+								<option><?php echo($resident); ?></option>
+							<?php } ?>
+							</select>
+						<br />
+						Due Date:
+							<input type="text" id="datepicker_duedate" name="date_duedate" />
+							<input type="text" id="timepicker_duedate" name="time_duedate" class="time" />
+
+						<br />
+						Module/QuestionSet:
+							<select id="select_questionset" name="questionset_id">
+							<?php 
+							foreach(RadStep\getAllQuestionSets() as $key => $questionset){ ?>		
+								<option value="<?php echo($key)?>"><?php echo($questionset); ?></option>
+							<?php } ?>
+							</select>
+						<div>
+						<input type="submit" name="submit" value="Create" id="btn_submit_createassignment" />
+						</div>
+						<div id="create_assignment_status"></div>
+					</form>
+				</div><!--CLOSE div_import_questionset-->
+				
 				
 				<h3>Import Question Set</h3>
 				<div id="div_import_questionset">
@@ -259,6 +334,19 @@
 						<div>
 						<input type="submit" name="submit" id="btn_submit_importquestionset" value="Import"/>
 						</div>
+						
+						<style type="text/css">
+							.progress { position:relative; width:400px; border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+							.bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+							.percent { position:absolute; display:inline-block; top:3px; left:48%; }
+						</style> 
+						<div class="progress">
+					        <div class="bar"></div >
+					        <div class="percent">0%</div >
+					    </div>
+					    <div id="import_questionset_status"></div>
+						
+						
 					</form>
 				</div><!--CLOSE div_import_questionset-->
 				

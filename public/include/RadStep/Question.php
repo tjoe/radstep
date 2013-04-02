@@ -23,14 +23,17 @@ class Question
 	var $images = array();
 	var $multiple_choices = array();
 	var $keywords = "";
+	var $explanation = "";
 	var $difficulty = "";
 	var $json = "";
-	
+	var $database = false;
+			
 	/**
 	 * Constructs a question object
-	 * @param int $question_id ID of the question to create, optional
+	 * @param int $question_id ID of the question to create, optional; default value is false so that
+	 * a warning is not thrown if no question_id is provided as in new Question()
 	 */
-	function __construct($question_id)
+	function __construct($question_id = false)
 	{
 		// file location for the user database
 		$dbfile = DATABASE_LOCATION  . DATABASE_NAME . ".db";
@@ -46,7 +49,7 @@ class Question
 		// but we'll still need to define the user table before we can use the database.
 		if($rebuild) { $this->rebuildDatabase($dbfile); }
 	
-		if(isset($question_id)){
+		if($question_id){
 			$this->$question_id = $question_id;
 			$sql = "SELECT json FROM questions WHERE question_id=".$question_id.";";
 			
@@ -56,6 +59,7 @@ class Question
 			}
 		}
 	}
+	
 	
 	//Functions
 	/**
@@ -83,7 +87,7 @@ class Question
 	{
 		$json_obj = json_decode($json);
 			
-		if(!is_null($json_obj)){	
+		if(!is_null($json_obj)){
 			
 			// $this->question_id = $json_obj->question_id;
 			$this->created_by = $json_obj->created_by;
@@ -91,6 +95,7 @@ class Question
 			$this->images = $json_obj->images;
 			$this->prompt = $json_obj->prompt;
 			$this->multiple_choices = $json_obj->multiple_choices;
+			$this->explanation = $json_obj->explanation;
 			$this->keywords = $json_obj->keywords;
 			$this->difficulty = $json_obj->difficulty;
 			
@@ -112,14 +117,15 @@ class Question
 	 {
 	 	$to_serialize = array();
 
-		$to_serialize[] = $this->question_id;
-		$to_serialize[] = $this->created_by = "";
-		$to_serialize[] = $this->created_datetime;
-		$to_serialize[] = $this->prompt;
-		$to_serialize[] = $this->images;
-		$to_serialize[] = $this->multiple_choices;
-		$to_serialize[] = $this->keywords;
-		$to_serialize[] = $this->difficulty;	
+		$to_serialize["question_id"] = $this->question_id;
+		$to_serialize["created_by"] = $this->created_by;
+		$to_serialize["created_datetime"] = $this->created_datetime;
+		$to_serialize["prompt"] = $this->prompt;
+		$to_serialize["images"] = $this->images;
+		$to_serialize["multiple_choices"] = $this->multiple_choices;
+		$to_serialize["explanation"] = $this->explanation;
+		$to_serialize["keywords"] = $this->keywords;
+		$to_serialize["difficulty"] = $this->difficulty;	
 		
 		$this->json = json_encode($to_serialize);
 		
@@ -162,22 +168,41 @@ class Question
 	  */
 	  function addInstanceToDb()
 	  {
+
 	  	if(empty($this->question_id)){
-	  			
-	  		$tmp_id = uniqid();
 			
-			$sql_insert = "INSERT INTO questions (json) VALUES (".$tmp_id.");";
-			$this->database->exec($insert);
-			
-			$sql_get_real_id = "SELECT question_id FROM questions WHERE json = ".$tmp_id.";";
-			foreach($this->database->query($query) as $data) {
-				$read_id = $data["question_id"];
-			}
-			
-			$this->question_id = $read_id;
 			$this->setJsonFromInstance();
-			$sql_update = "UPDATE questions SET json = ".$this->json." WHERE question_id = ".$real_id.";";
-			$this->database->exec($update);
+
+			/**TODO: escape characters for html? */
+			
+			$sql_insert = "INSERT INTO questions (json) VALUES (null);";
+			$this->database->exec($sql_insert);
+			$this->question_id = $this->database->lastInsertId();
+			//$this->setJsonFromInstance();
+			$this->updateInstanceToDb();
+	
+			return true;
+	  	}
+		
+		return false;
+
+	  }
+	  
+	  /**
+	  * Updates the database row corresponding to this instance
+	  * 	pre: assignment_id for this instance should not be empty
+	  * 	record is then updated 
+	  * @return true for success, false for fail
+	  */
+	  function updateInstanceToDb()
+	  {
+	  	if(!empty($this->question_id)){
+	  		
+			$this->setJsonFromInstance();
+			
+			$sql_update = "UPDATE questions SET json = ".$this->database->quote($this->json)." WHERE question_id = ".$this->question_id.";";
+
+			$this->database->exec($sql_update);
 			
 			return true;
 	  	}
