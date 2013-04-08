@@ -7,7 +7,7 @@
 	use RadStep;
 	
 	/*
-	 * This performs the action of saving the responses from a question form
+	 * Helper php file that performs the action of saving the responses from a question form
 	 * pre: POST HTTP request expected to supply the following fields to this script
 	 * 			assignment_id,
 	 * 			question_id,
@@ -32,14 +32,15 @@
 		//check if USER matches assigned_by or assigned_to field
 		if($USER->username == $assignment->assigned_by || $USER->username == $assignment->assigned_to)
 		{
-			
+
 			//responses will be a key-value array where the key is the question_id
-			$assignment->responses[$question_id] = $choice_value;
-			
-			//add to database
-			$assignment->updateInstanceToDb();
-			
-			echo("Response saved");
+			if($assignment->saveResponse($question_id, $choice_value))
+			{ 
+				echo("Response saved: ".$assignment->getResponse($question_id));
+			}
+			else {
+				echo("Failed to save response");
+			}
 		
 		}else{
 			echo("Sorry, you are not associated with this assignment");

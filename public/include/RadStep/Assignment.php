@@ -20,6 +20,9 @@ class Assignment extends QuestionSet
 	const ASSIGNED_NOT_STARTED = 2;
 	const ASSIGNED_STARTED = 3;
 	
+	const TEST_MODE = 2;
+	const TUTOR_MODE = 3;
+	
 	//Class Variables
 	var $assignment_id = "";
 	var $responses = array();
@@ -28,6 +31,7 @@ class Assignment extends QuestionSet
 	var $assigned_datetime = "";
 	var $started_datetime = "";
 	var $due_datetime = "";
+	var $assignment_mode = "";
 	var $status = "";
 	var $json = "";
 	var $database = false;
@@ -65,7 +69,7 @@ class Assignment extends QuestionSet
 	
 		if($assignment_id){
 			$this->$assignment_id = $assignment_id;
-			$sql = "SELECT * FROM assignments WHERE assignment_id=".$assignment_id.";";
+			$sql = "SELECT json FROM assignments WHERE assignment_id=".$assignment_id.";";
 			
 			foreach($this->database->query($sql) as $data){
 				$this->json = $data["json"];	
@@ -120,34 +124,60 @@ class Assignment extends QuestionSet
 	public function saveResponse($question_id, $response_chosen)
 	{
 		// find location of the question_id in the questions array
-		$question_index = false;
 		$question_index = array_search($question_id, $this->questions);
-		if(!$question_index)
+		
+		if(is_null($question_index) || $question_index === false )
 		{
 			// if question doesn't exist return false
 			return false;
 		}
 		else{
-			// set corresponding value in responses[index] to 
-			$this->responses[$question_index] = $response_chosen;
+			// set corresponding value in responses[question_id] to 
+			$this->responses[$question_id] = (int)$response_chosen;
 			
-			/* DEBUG:
-			 * update $json, might have problems with this??? especially with
-			 * the $json object variable which doesn't need to be included in the 
-			 * json output
-			 */
-			
-			$this->json = json_encode($this);
-		
 			// save $json for this assignment to database
-			$updatesql = "UPDATE assignments SET json = '".$this->json."' WHERE assignment_id=".$this->assignment_id.";";
-			$this->database->exec($update);
+			$this->setJsonFromInstance();
+			$updatesql = "UPDATE assignments SET json = ".$this->database->quote($this->json)." WHERE assignment_id=".$this->assignment_id.";";
+			$statement = $this->database->prepare($updatesql);
+			
+			$statement->execute();
+			//$this->database->exec(quote($updatesql));
+			
+			
 		
 			return true;
 		}
-		
-		
 	}
+	
+	/**
+	 * Gets a response for a question in an assignment
+	 * @param int $question_id ID of the question that was responded to
+	 * @return int choice number for question or null if the question_id doesn't exist in the list of responses
+	 */
+	public function getResponse($question_id)
+	{
+
+			// use array_keys b/c responses is an associative array
+			
+			//$response_index = array_search($question_id, array_keys($this->responses));
+			//echo($question_id);
+			//echo($this->responses[$question_id]);
+			//var_dump($this->responses);
+			$res = false; //$this->responses[$question_id];
+			
+			/**TODO: for some reason this->responses[$question_id]; DOES NOT WORK on this assoc array...must retrieve value manually */
+			foreach($this->responses as $key => $val)
+			{
+				if($key == $question_id)	$res = $val;
+			}
+		
+			if( $res !== false ) //strict, in case $res = 0
+				return $res;
+			else 
+				return null;
+	}
+	
+	
 	
 	/**
 	 * Sets the variables in this instance by the provided json string
@@ -161,9 +191,9 @@ class Assignment extends QuestionSet
 		$json_obj = json_decode($json);
 		
 		//var_dump($json_obj);
-
 		
 		if(!is_null($json_obj)){
+			
 			//Inherited from QuestionSet 
 			$this->questionset_id = $json_obj->questionset_id;
 			$this->name = $json_obj->name;
@@ -175,13 +205,16 @@ class Assignment extends QuestionSet
 
 			//Native to Assignment
 			$this->assignment_id = $json_obj->assignment_id;
-			$this->responses = $json_obj->responses;
 			$this->assigned_by = $json_obj->assigned_by;
 			$this->assigned_to = $json_obj->assigned_to;
 			$this->assigned_datetime = $json_obj->assigned_datetime;
 			$this->started_datetime = $json_obj->started_datetime;
 			$this->due_datetime = $json_obj->due_datetime;
 			$this->status = $json_obj->status;
+			$this->assignment_mode = $json_obj->assignment_mode;
+			
+			//Decode Associative arrays
+			$this->responses = (array)($json_obj->responses);
 		 
 		return true;
 		}
@@ -218,6 +251,7 @@ class Assignment extends QuestionSet
 		$to_serialize["started_datetime"] = $this->started_datetime;
 		$to_serialize["due_datetime"] = $this->due_datetime;
 		$to_serialize["status"] = $this->status;
+		$to_serialize["assignment_mode"] = $this->assignment_mode;
 
 		$this->json = json_encode($to_serialize);
 		

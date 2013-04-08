@@ -4,7 +4,7 @@
 	
 	require_once("./include/RadStep/RadStepCommon.php");
 	
-	use RadStep;
+	//use RadStep;
 	
 	/*
 	 * This is a temporary means of importing modules to the database with their associated images.

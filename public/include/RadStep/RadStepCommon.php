@@ -47,7 +47,8 @@
 	{
 		$dbfile = DATABASE_LOCATION  . DATABASE_NAME . ".db";	
 			
-		$sql = "SELECT username FROM users;";
+		// get all users with a Resident role	
+		$sql = "SELECT username FROM users WHERE role LIKE '%Resident%';";
 		$all_users = array();
 		
 		try{ 

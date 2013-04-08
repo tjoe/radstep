@@ -128,69 +128,84 @@
 
 	<script type="text/javascript">
 
+	/** GENERAL jquery(document).ready() for all users **/
 	jQuery(document).ready(function(){
-	
-	/** INITIALIZATION **/
-	
-	
-	//autmatically adds random num to get ajax requests to prevent browser caching	
-	$.ajaxSetup({ cache: false });
-	
-	//debugging
-	$(document).ajaxError(function(event, xhr, settings, exception){ 
-		alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
-	});
-	
 
-	$( "#div_tabs" ).tabs();
+		//autmatically adds random num to get ajax requests to prevent browser caching	
+		$.ajaxSetup({ cache: false });
+		
+		//debugging
+		$(document).ajaxError(function(event, xhr, settings, exception){ 
+			alert('error in: ' + settings.url + ' \n'+'error:' + xhr.responseText ); 
+		});
+		
 	
-	$( "#accordion_faculty" ).accordion({heightStyle: "content"});
-	$( "#accordion_resident" ).accordion({heightStyle: "content"});
-	
-	//SETUP ajax file upload for import question set
-	var bar = $('.bar');
-	var percent = $('.percent');
-	$("#form_import_questionset").ajaxForm({
-	    beforeSend: function() {
-	        $('#import_questionset_status').empty();
-	        var percentVal = '0%';
-	        bar.width(percentVal)
-	        percent.html(percentVal);
-	    },
-	    uploadProgress: function(event, position, total, percentComplete) {
-	        var percentVal = percentComplete + '%';
-	        bar.width(percentVal)
-	        percent.html(percentVal);
-	    },
-	    success: function() {
-	        var percentVal = '100%';
-	        bar.width(percentVal)
-	        percent.html(percentVal);
-	    },
-		complete: function(xhr) {
-			$('#import_questionset_status').html(xhr.responseText);
-		}
-	}); 
-    	
-    	
-    // SETUP create assignment form
-	$("#form_create_assignment").ajaxForm({
-	    target: "#create_assignment_status", //where to send the result
-	}); 
+		$( "#div_tabs" ).tabs();
 	
 	}); //close jquery(document).ready
 	
-	$(function(){
-		$("#datepicker_duedate").datepicker({dateFormat:"D M dd yy"}); // 
-		var today = new Date();
-		today.setDate(today.getDate()+1); //sets default date to tomorrow
-		$("#datepicker_duedate").val(today.toDateString());
-		
-		$("#timepicker_duedate").timepicker();
-		$("#timepicker_duedate").timepicker( 'setTime', new Date()); //sets default time to now
-	});
-	
 	</script>
+	
+	
+	
+	<?php if($is_resident) { ?>
+	<script type="application/javascript">
+		/** RESIDENT jquery(document).ready() **/
+		jQuery(document).ready(function(){
+			$( "#accordion_resident" ).accordion({heightStyle: "content"});
+		});
+	</script><?php } //endif resident ?>
+	
+	
+	<?php if($is_faculty) { ?>
+	<script type="application/javascript">
+		/** FACULTY jquery(document).ready() **/
+		jQuery(document).ready(function(){
+			
+			$( "#accordion_faculty" ).accordion({heightStyle: "content"});
+		
+			//SETUP ajax file upload for import question set
+			var bar = $('.bar');
+			var percent = $('.percent');
+			$("#form_import_questionset").ajaxForm({
+			    beforeSend: function() {
+			        $('#import_questionset_status').empty();
+			        var percentVal = '0%';
+			        bar.width(percentVal)
+			        percent.html(percentVal);
+			    },
+			    uploadProgress: function(event, position, total, percentComplete) {
+			        var percentVal = percentComplete + '%';
+			        bar.width(percentVal)
+			        percent.html(percentVal);
+			    },
+			    success: function() {
+			        var percentVal = '100%';
+			        bar.width(percentVal)
+			        percent.html(percentVal);
+			    },
+				complete: function(xhr) {
+					$('#import_questionset_status').html(xhr.responseText);
+				}
+			}); 
+		    	
+		    
+		    // SETUP create assignment form
+			$("#form_create_assignment").ajaxForm({
+			    target: "#create_assignment_status", //where to send the result
+			}); 
+			
+			$("#datepicker_duedate").datepicker({dateFormat:"D M dd yy"}); // 
+				var today = new Date();
+				today.setDate(today.getDate()+1); //sets default date to tomorrow
+				$("#datepicker_duedate").val(today.toDateString());
+				
+				$("#timepicker_duedate").timepicker();
+				$("#timepicker_duedate").timepicker( 'setTime', new Date()); //sets default time to now
+		
+		
+		}); //close jquery(document).ready
+	</script><?php } //endif faculty ?>
 	
 	
 	</head>
@@ -294,8 +309,6 @@
 				</div>
 				<h3>Create Assignment</h3>
 				<div id="div_create_assignment">
-					<!--TODO: Make this an AJAX style
-						many solutions, see http://stackoverflow.com/questions/2320069/jquery-ajax-file-upload -->
 					<form id="form_create_assignment" action="createassignment.php" method="post" >
 						Assign To: 
 							<select id="select_assigned_to" name="assigned_to">
@@ -316,6 +329,9 @@
 								<option value="<?php echo($key)?>"><?php echo($questionset); ?></option>
 							<?php } ?>
 							</select>
+						<br />
+							Test Mode<input type="radio" id="radio_assignment_mode_test" name="assignment_mode" value="<?php echo RadStep\Assignment::TEST_MODE ?>" checked="checked" />
+							Tutor Mode<input type="radio" id="radio_assignment_mode_tutor" name="assignment_mode" value="<?php echo RadStep\Assignment::TUTOR_MODE ?>" />
 						<div>
 						<input type="submit" name="submit" value="Create" id="btn_submit_createassignment" />
 						</div>
@@ -367,7 +383,7 @@
 					<!-- RESIDENT TAB INCOMPLETED ASSIGNMENTS TABLE -->
 					<table id="tbl_resident_incomplete" class="assignments_table">
 						<tr>
-							<th>Assigned To</th>
+							<th>Assigned By</th>
 							<th>Assigned On</th>
 							<th>Status</th>
 							<th>QuestionSet Name</th>
@@ -396,7 +412,7 @@
 					<!-- RESIDENT TAB COMPLETED ASSIGNMENTS TABLE -->
 					<table id="tbl_resident_complete" class="assignments_table">
 						<tr>
-							<th>Assigned To</th>
+							<th>Assigned By</th>
 							<th>Assigned On</th>
 							<th>Status</th>
 							<th>QuestionSet Name</th>

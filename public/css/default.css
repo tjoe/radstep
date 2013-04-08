@@ -1,3 +1,9 @@
+body {
+	font: 0.8em "Trebuchet MS", sans-serif;
+	background-color: #AAAAAA;
+	color:black;
+}
+
 #ul_menu{
 	font-size:13px;
 	letter-spacing:3px;
@@ -24,11 +30,6 @@
 	color: #999;
 }
 
-body {
-	font: 62.5% "Trebuchet MS", sans-serif;
-	background-color: #DDD;
-	color:#999;
-}
 
 a:link{
   text-decoration: none; color: #666;font-family:Arial,sans-serif;

@@ -48,20 +48,42 @@ class Question
 		// If we need to rebuild, the file will have been automatically made by the PDO call,
 		// but we'll still need to define the user table before we can use the database.
 		if($rebuild) { $this->rebuildDatabase($dbfile); }
-	
+		
 		if($question_id){
+			
 			$this->$question_id = $question_id;
+			
 			$sql = "SELECT json FROM questions WHERE question_id=".$question_id.";";
+			
+			try{
+				$statement = $this->database->prepare($sql);
+				$statement->execute();
+				$data = $statement->fetch();
+				$this->json = $data["json"];	
+			}catch(exception $ex){
+				echo $ex;
+			}
+			
+			$this->setInstanceFromJson($data["json"]);
+			
+			/*
+			$sql = "SELECT json FROM questions WHERE question_id=".$question_id.";";
+			
 			
 			foreach($this->database->query($sql) as $data){
 				$this->json = $data["json"];	
 				$this->setInstanceFromJson($data["json"]);				 
 			}
+			 */
 		}
+		
 	}
 	
 	
 	//Functions
+	
+	
+	
 	/**
 	 * Rebuilds the database if there is no database to work with yet.
 	 * Creates the table assignments
@@ -89,7 +111,7 @@ class Question
 			
 		if(!is_null($json_obj)){
 			
-			// $this->question_id = $json_obj->question_id;
+			$this->question_id = $json_obj->question_id;
 			$this->created_by = $json_obj->created_by;
 			$this->created_datetime = $json_obj->created_datetime;
 			$this->images = $json_obj->images;

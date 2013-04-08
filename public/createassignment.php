@@ -33,6 +33,10 @@
 		$assignment->assigned_datetime = date(DateTime::ISO8601);
 		$assignment->due_datetime = date(DateTime::ISO8601,strtotime($_POST["date_duedate"]." ".$_POST["time_duedate"]));
 		$assignment->status = RadStep\Assignment::ASSIGNED_NOT_STARTED;
+		if($_POST["assignment_mode"] == "Tutor")
+			$assignment->assignment_mode = RadStep\Assignment::TUTOR_MODE;
+		else
+			$assignment->assignment_mode = RadStep\Assignment::TEST_MODE;
 		
 		//add to database
 		$assignment->addInstanceToDb();

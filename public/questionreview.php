@@ -36,10 +36,18 @@ jQuery(document).ready(function(){
 
 <style type="text/css">
 	
+	#div_question_image{
 
+		
+	}
+	#div_question_btn{
+		width:90%;
+		float:right;
+		padding:5px;
+	}
 	.img_question{
-		max-height: 20em;
-		max-width: 20em;
+		max-height: 40em;
+		max-width: 40em;
 	}
 	.div_question_image_caption{
 		text-align:center;
@@ -49,10 +57,8 @@ jQuery(document).ready(function(){
 </style>
 
 
-<form id="form_question" action="saveresponses.php" method="post">
-		<input type="hidden" name="question_id" value="<?php echo $question->question_id ?>" />
-		<input type="hidden" name="assignment_id" value="<?php echo $assignment->assignment_id ?>" />
-				
+<div id="div_question">
+
 		<!-- IMAGES -->
 		<div id="div_question_image">
 	<?php	foreach ($question->images as $image){  ?>
@@ -67,29 +73,51 @@ jQuery(document).ready(function(){
 	
 	<!-- PROMPT -->
 	<div id="div_question_prompt">
-		<?php echo($question->prompt); ?>
+		<?php 
+			echo($question->prompt); 
+		?>
 	</div>
-	
 	<br />
 	
 	<!-- MULTIPLE CHOICES -->
 	<?php 
-		$selected = false;
+
 		$chosen_response = $assignment->getResponse($question->question_id);
+		
+		$is_correct_response = false;
 		
 		foreach($question->multiple_choices as $choice)
 		{
-			if(!is_null($chosen_response))
-				$selected = (bool)($choice->choice === $chosen_response); ?>
-			<input type="radio" name="radio_choices" value="<?php echo $choice->choice ?>" <?php if($selected) echo('checked="checked"'); ?>/><?php echo $choice->caption ?><br />
-	<?php } ?>
-	
-	
+			if(!is_null($chosen_response) && $choice->choice === $chosen_response && $choice->correct )
+				$is_correct_response = true;
 
-	
-	<div id="div_saveresponses_result">
+			if($choice->correct)
+				echo("<img src='img/green_check.png' style='height:15px;width:15px' />");
+			else 
+				echo("<img src='img/red_x.png' style='height:15px;width:15px' />");
+			
+			echo($choice->caption);
+			echo("<br />");
+ 		} ?>
+
+	<br />
+	<div id="div_explanation">
+		<?php 
+			
+			if($is_correct_response){
+				echo("You chose the CORRECT answer.");
+			}else
+			{
+				echo("You chose the INCORRECT answer.".PHP_EOL);
+			}
+			
+			echo("<br />");
+			
+			echo($question->explanation); 
 		
-	</div>
-</form>
+		?>
+	</div><!--close div_explanation -->
+	
+</div><!--close div_question -->
 
 
