@@ -262,6 +262,7 @@
 							<th>Assigned To</th>
 							<th>Assigned On</th>
 							<th>Status</th>
+							<th>Mode</th>
 							<th>QuestionSet Name</th>
 							<th>Delete</th>
 						</tr>
@@ -270,7 +271,19 @@
 						<tr>
 							<td><?php echo($assignment->assigned_to); ?></td>
 							<td><?php echo($assignment->assigned_datetime); ?></td>
-							<td><?php echo($assignment->status); ?></td>
+							<td><?php 
+								switch($assignment->status){
+									case RadStep\Assignment::COMPLETE: echo("Completed"); break;
+									case RadStep\Assignment::ASSIGNED_NOT_STARTED: echo("Assigned"); break;
+									case RadStep\Assignment::ASSIGNED_STARTED: echo("Started"); break;
+								}	
+							 ?></td>
+							<td><?php 
+								switch($assignment->assignment_mode){
+									case RadStep\Assignment::TEST_MODE: echo("Test"); break;
+									case RadStep\Assignment::TUTOR_MODE: echo("Tutor"); break;
+								}	
+							 ?></td>
 							<td><?php echo($assignment->name); ?></td>
 							<td><a href="<?php echo("deleteAssignment.php?assignment_id=".$assignment_id); ?>">Delete</a></td>
 						</tr>
@@ -290,7 +303,9 @@
 							<th>Assigned To</th>
 							<th>Assigned On</th>
 							<th>Status</th>
+							<th>Mode</th>
 							<th>QuestionSet Name</th>
+							<th>Score</th>
 							<th>Review</th>
 						</tr>
 						<?php foreach($assignments_assigned_by_complete as $assignment){ ?>
@@ -298,8 +313,21 @@
 						<tr>
 							<td><?php echo($assignment->assigned_to); ?></td>
 							<td><?php echo($assignment->assigned_datetime); ?></td>
-							<td><?php echo($assignment->status); ?></td>
+							<td><?php 
+								switch($assignment->status){
+									case RadStep\Assignment::COMPLETE: echo("Completed"); break;
+									case RadStep\Assignment::ASSIGNED_NOT_STARTED: echo("Assigned"); break;
+									case RadStep\Assignment::ASSIGNED_STARTED: echo("Started"); break;
+								}	
+							 ?></td>
+							 <td><?php 
+								switch($assignment->assignment_mode){
+									case RadStep\Assignment::TEST_MODE: echo("Test"); break;
+									case RadStep\Assignment::TUTOR_MODE: echo("Tutor"); break;
+								}	
+							 ?></td>
 							<td><?php echo($assignment->name); ?></td>
+							<td><?php echo($assignment->score); ?></td>
 							<td><a href="<?php echo("assignment.php?assignment_id=".$assignment_id); ?>">Review</a></td>
 						</tr>
 					
@@ -366,6 +394,17 @@
 					</form>
 				</div><!--CLOSE div_import_questionset-->
 				
+				<h3>Results</h3>
+				<div>
+				<form id="form_get_results">
+					<select id="select_get_results_for" name="resident_username">
+					<?php foreach(RadStep\getAllResidents() as $resident){ ?>		
+						<option><?php echo($resident); ?></option>
+					<?php } ?>
+					</select>
+				</form>
+				
+				<div id="div_faculty_results_resident"></div>
 				
 				</div><!--CLOSE accordion_faculty -->
 				
@@ -386,6 +425,7 @@
 							<th>Assigned By</th>
 							<th>Assigned On</th>
 							<th>Status</th>
+							<th>Mode</th>
 							<th>QuestionSet Name</th>
 							<th>Start</th>
 						</tr>
@@ -396,7 +436,19 @@
 						<tr>
 							<td><?php echo($assignment->assigned_by); ?></td>
 							<td><?php echo($assignment->assigned_datetime); ?></td>
-							<td><?php echo($assignment->status); ?></td>
+							<td><?php 
+								switch($assignment->status){
+									case RadStep\Assignment::COMPLETE: echo("Completed"); break;
+									case RadStep\Assignment::ASSIGNED_NOT_STARTED: echo("Assigned"); break;
+									case RadStep\Assignment::ASSIGNED_STARTED: echo("Started"); break;
+								}	
+							 ?></td>
+							 <td><?php 
+								switch($assignment->assignment_mode){
+									case RadStep\Assignment::TEST_MODE: echo("Test"); break;
+									case RadStep\Assignment::TUTOR_MODE: echo("Tutor"); break;
+								}	
+							 ?></td>
 							<td><?php echo($assignment->name); ?></td>
 							<td><a href="<?php echo("assignment.php?assignment_id=".$assignment_id); ?>">Start</a></td>
 						</tr>
@@ -415,7 +467,9 @@
 							<th>Assigned By</th>
 							<th>Assigned On</th>
 							<th>Status</th>
+							<th>Mode</th>
 							<th>QuestionSet Name</th>
+							<th>Score</th>
 							<th>Review</th>
 						</tr>
 						<?php 
@@ -425,8 +479,21 @@
 						<tr>
 							<td><?php echo($assignment->assigned_by); ?></td>
 							<td><?php echo($assignment->assigned_datetime); ?></td>
-							<td><?php echo($assignment->status); ?></td>
+							<td><?php 
+								switch($assignment->status){
+									case RadStep\Assignment::COMPLETE: echo("Completed"); break;
+									case RadStep\Assignment::ASSIGNED_NOT_STARTED: echo("Assigned"); break;
+									case RadStep\Assignment::ASSIGNED_STARTED: echo("Started"); break;
+								}	
+							 ?></td>
+							 <td><?php 
+								switch($assignment->assignment_mode){
+									case RadStep\Assignment::TEST_MODE: echo("Test"); break;
+									case RadStep\Assignment::TUTOR_MODE: echo("Tutor"); break;
+								}	
+							 ?></td>
 							<td><?php echo($assignment->name); ?></td>
+							<td><?php echo($assignment->score); ?></td>
 							<td><a href="<?php echo("assignment.php?assignment_id=".$assignment_id); ?>">Review</a></td>
 						</tr>
 					

@@ -10,19 +10,22 @@
 	
 	$assignment = new RadStep\Assignment($_POST["assignment_id"]);
 	$question = new RadStep\Question($_POST["question_id"]);
-	$mode = $_POST["review_mode"];
 
 	
+
 ?>
 
 <script type="text/javascript" src="lib/jquery.form.js"></script>
 
 <script type="text/javascript">
 
+
+
 jQuery(document).ready(function(){
 	
 	$("#form_question").ajaxForm({
-	    target: "#div_saveresponses_result", //where to send the result
+		url: "response.php",
+	    target: "#div_result", //where to send the result
 	}); 
 	
 	// submit form to save responses when the radio buttons are changed
@@ -49,7 +52,7 @@ jQuery(document).ready(function(){
 </style>
 
 
-<form id="form_question" action="saveresponses.php" method="post">
+<form id="form_question" method="post">
 		<input type="hidden" name="question_id" value="<?php echo $question->question_id ?>" />
 		<input type="hidden" name="assignment_id" value="<?php echo $assignment->assignment_id ?>" />
 				
@@ -83,13 +86,12 @@ jQuery(document).ready(function(){
 				$selected = (bool)($choice->choice === $chosen_response); ?>
 			<input type="radio" name="radio_choices" value="<?php echo $choice->choice ?>" <?php if($selected) echo('checked="checked"'); ?>/><?php echo $choice->caption ?><br />
 	<?php } ?>
-	
-	
 
 	
-	<div id="div_saveresponses_result">
+	<div id="div_result">
 		
 	</div>
+
 </form>
 
 

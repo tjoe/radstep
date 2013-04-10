@@ -166,7 +166,6 @@
 	var review_mode = Boolean('<?php echo $review_mode ?>');
 	var question_id_list = [];
 	
-	
 
 	jQuery(document).ready(function(){
 	
@@ -180,16 +179,20 @@
 	});
 	
 	//question_id_list is populated by php (see #ul_question_list)
-	var current_question = question_id_list[0];
+	var current_question_index = 0;
+	var current_question_id = question_id_list[current_question_index];
 
 	// load first question
-	loadQuestion(current_question, assignment_id, review_mode);
+	loadQuestion(current_question_id, assignment_id, review_mode);
 
 	
 	$("#ul_question_list li").click(function(){
 		
 		var question_index = $(this).index();
 		var question_id = $(this).attr("id").replace("q_",""); //removes the prefix added to each question id
+		
+		/*TODO: don't rely on hack of getting the actual question id from the tag's id */
+		//var question_id = current_question_id;
 		
 		loadQuestion(question_id, assignment_id, review_mode);
 
@@ -198,7 +201,7 @@
 	$(".divbtn_end_exam").click(function(){
 		
 		//mark assignment as complete
-		$.post("endexam.php", { assignment_id: "<?php echo $assignment->assignment_id ?>" },  
+		$.post("endexam.php", { assignment_id: assignment_id },  
 			function(data){
 				$("#div_question").html(data);
 			}).success(
@@ -212,13 +215,13 @@
 	});
 	
 	$(".divbtn_next_q").click(function(){
-		var goto_question = current_question+1;
+		var goto_question = current_question_index+1;
 		if(goto_question < question_id_list.length)
 		$("#ul_question_list > li:eq( " + goto_question + ")").click();	
 	});
 	
 	$(".divbtn_prev_q").click(function(){
-		var goto_question = current_question-1;
+		var goto_question = current_question_index-1;
 		if(goto_question >= 0)
 			$("#ul_question_list > li:eq( " + goto_question + ")").click();	
 	});
@@ -228,28 +231,27 @@
 	 * - question_id: question_id to be loaded from the database
 	 * - assignment_id: currently loaded assignment to load the question from
 	 * - review_mode: whether or not the assignment is currently loaded in review mode or not
+	 * 					of note, question.php will decide if the assignment is assigned as tutor mode or not
+	 * 					and display the question appropriately
 	 * * @typedef {{question_id: number, assignment_id: number, review_mode: bool }}
 	 */
 	function loadQuestion(question_id, assignment_id, review_mode){
-		if(!review_mode)
-		{
-			$("#div_question").load("question.php", 
-			{	
-				"question_id": question_id , 
-				"assignment_id": assignment_id,
-				"review_mode" : review_mode
-			}); 
-		}else{
-			$("#div_question").load("questionreview.php", 
-			{	
-				"question_id": question_id , 
-				"assignment_id": assignment_id,
-				"review_mode" : review_mode
-			}); 
-		}
+
+		/*TODO: SECURITY BUG; this is not the safest way of calling the question since a smart person could modify
+		 * the question_url to get to review mode
+		 */ 
+		 var question_url = "";
+		 if(review_mode) question_url = "questionreview.php";
+		 else question_url = "question.php";
+		 
+		 $("#div_question").load(question_url, 
+		 	{	"question_id": question_id , 
+		 		"assignment_id": assignment_id
+		 	}); 
+			
+
 		
-		//get index of question in question_id_list
-		
+		//get index of question in question_id_list	
 		var question_index = question_id_list.indexOf(question_id);
 
 		//set all li as inactive
@@ -258,7 +260,7 @@
 		//set only li at index as active
 		$("#ul_question_list > li:eq( " + question_index + ")").addClass("active");
 		
-		current_question = question_index;
+		current_question_index = question_index;
 			
 	}// close function loadQuestion
 	
@@ -290,8 +292,7 @@
 		<div id="div_question_list">
 			<!-- Question List -->
 			<ul id="ul_question_list">
-			<!-- TODO: if status = completed = set review mode, if not completed = set exam mode -->
-			<!-- TODO: TIMER at top of total time elapsed while on this page, autosubmit assignment if exceeds timelimit -->	
+			<!-- TODO: TIMER at top of total time elapsed while on this page, auto end exam assignment if exceeds timelimit -->	
 			<?php foreach($question_list as $question_number => $question_id){ ?>
 				<li id="<?="q_".$question_id ?>"><?= $question_number+1 ?></li>
 				<script type="application/javascript">

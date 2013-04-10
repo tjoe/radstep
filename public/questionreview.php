@@ -10,7 +10,6 @@
 	
 	$assignment = new RadStep\Assignment($_POST["assignment_id"]);
 	$question = new RadStep\Question($_POST["question_id"]);
-	$mode = $_POST["review_mode"];
 
 	
 ?>
@@ -46,8 +45,8 @@ jQuery(document).ready(function(){
 		padding:5px;
 	}
 	.img_question{
-		max-height: 40em;
-		max-width: 40em;
+		max-height: 20em;
+		max-width: 20em;
 	}
 	.div_question_image_caption{
 		text-align:center;

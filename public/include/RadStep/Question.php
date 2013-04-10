@@ -82,6 +82,24 @@ class Question
 	
 	//Functions
 	
+	/** 
+	 * Gets the index of the correct answer choice as listed in the array multiple_choices
+	 * @return index of the correct answer choice as listed in the array multiple_choices, 
+	 * 			returns null if no answer choice is listed as correct
+	 * 			if multiple choices are listed as correct, then the index of the last 
+	 * 			one listed will be returned
+	 */
+	 function getCorrectChoiceIndex()
+	 {
+	 	$correct_index = null;
+		
+	 	foreach($this->multiple_choices as $index => $choice){
+	 		
+	 		if($choice->correct){ $correct_index=$index; };
+	 	}
+		
+		return $correct_index;
+	 }
 	
 	
 	/**
